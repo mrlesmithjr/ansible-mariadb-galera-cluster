@@ -19,7 +19,7 @@ deb_db_password: []  #defines debian db password...generate using echo password 
 debian_mariadb_repository: 'deb http://ftp.utexas.edu/mariadb/repo/10.0/{{ ansible_distribution|lower() }} {{ ansible_distribution_release }} main'
 email_notifications: 'notifications@{{ smtp_domain_name }}'  #defines email address to receive notifications...define here or in group_vars/group
 enable_cacti_monitoring: false  #defines if cacti monitoring should be enabled for mysql
-enable_galera_monitoring_script: true
+enable_galera_monitoring_script: false
 galera_cluster_name: [] # Define the name of the cluster...define here or in group_vars/group
 galera_cluster_nodes: [] # Define the IP addresses of the nodes which will be part of the cluster...define here or in group_vars/group
 galera_monitor_script_name: galeranotify.py
