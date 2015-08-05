@@ -24,10 +24,12 @@ galera_cluster_name: [] # Define the name of the cluster...define here or in gro
 galera_cluster_nodes: [] # Define the IP addresses of the nodes which will be part of the cluster...define here or in group_vars/group
 galera_monitor_script_name: galeranotify.py
 galera_monitor_script_path: /etc/mysql
+mysql_master: false  #defines a node in the cluster as master...define as true for one host in host_vars/host
 mysql_root_password: [] #defines mysql root password...generate using echo password | mkpasswd -s -m sha-512 ...define here or globally in group_vars/all/accounts
 notify_mail_from: 'galeranotify@{{ smtp_domain_name }}'  #defines email address that cluster notifications will be sent from
 notify_mail_to: '{{ email_notifications }}'
 notify_smtp_server: '{{ smtp_server }}'  #defines smtp server to send notifications through
+reconfigure_galera: false  #defines if the cluster should be reconfigured
 smtp_domain_name: '{{ pri_domain_name }}' #defines smtp domain for email...define here or globally in group_vars/all/email
 smtp_server: 'smtp.{{ pri_domain_name }}'  #defines smtp server to send email through...define here or globally in group_vars/all/servers
 ````
