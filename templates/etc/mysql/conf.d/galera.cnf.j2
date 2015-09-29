@@ -11,8 +11,7 @@ bind-address=0.0.0.0
 wsrep_node_name={{ ansible_hostname }}
 wsrep_provider=/usr/lib/galera/libgalera_smm.so
 wsrep_cluster_name="{{ galera_cluster_name }}"
-# wsrep_cluster_address="gcomm://{{ galera_cluster_nodes }}"
-wsrep_cluster_address="gcomm://{% for server in groups['{{ galera_cluster_group }}']%}{{ hostvars[server]ansible_default_ipv4.address }}{% if not loop.last %},{% endif %}{% endfor %}"
+wsrep_cluster_address="gcomm://{{ galera_cluster_nodes }}"
 # To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
 #wsrep_cluster_address="gcomm://"
 wsrep_sst_method=rsync
