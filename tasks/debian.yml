@@ -10,16 +10,16 @@
     - python-mysqldb
     - rsync
 
-- name: debian | importing repository key
+- name: debian | adding mariadb repo keys
   apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: "0xcbcb082a1bb943db"
-
-- name: debian | adding apt repository
-  apt_repository:
-    repo: "{{ debian_mariadb_repository }}"
+    keyserver: "{{ mariadb_debian_repo_keyserver }}"
+    id: "{{ mariadb_debian_repo_key }}"
     state: present
-    update_cache: yes
+
+- name: debian | adding mariadb repo
+  apt_repository:
+    repo: "{{ mariadb_debian_repo }}"
+    state: present
 
 - name: debian | installing mariadb-galera packages
   apt:
