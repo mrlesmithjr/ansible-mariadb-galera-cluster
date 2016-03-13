@@ -86,31 +86,41 @@
   template:
     src: etc/mysql/conf.d/temp.galera.cnf.j2
     dest: /etc/mysql/conf.d/galera.cnf
-  when: not galera_cluster_configured.stat.exists and mysql_master
+  when: >
+        not galera_cluster_configured.stat.exists and
+        inventory_hostname == mysql_master_node
 
 - name: debian | bootstrapping galera cluster
   service:
     name: mysql
     state: restarted
-  when: not galera_cluster_configured.stat.exists and mysql_master
+  when: >
+        not galera_cluster_configured.stat.exists and
+        inventory_hostname == mysql_master_node
 
 - name: debian | joining galera cluster
   service:
     name: mysql
     state: restarted
-  when: not galera_cluster_configured.stat.exists and not mysql_master
+  when: >
+        not galera_cluster_configured.stat.exists and
+        inventory_hostname != mysql_master_node
 
 - name: debian | configuring galera on mysql_master
   template:
     src: etc/mysql/conf.d/galera.cnf.j2
     dest: /etc/mysql/conf.d/galera.cnf
-  when: not galera_cluster_configured.stat.exists and mysql_master
+  when: >
+        not galera_cluster_configured.stat.exists and
+        inventory_hostname == mysql_master_node
 
 - name: debian | restarting galera on mysql_master
   service:
     name: mysql
     state: restarted
-  when: not galera_cluster_configured.stat.exists and mysql_master
+  when: >
+        not galera_cluster_configured.stat.exists and
+        inventory_hostname == mysql_master_node
 
 - name: debian | marking galera cluster as configured
   file:
