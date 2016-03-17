@@ -29,3 +29,13 @@
     - '127.0.0.1'
     - '::1'
     - localhost
+
+- name: configure_root_access | updating root passwords (allow from anywhere)
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ mysql_root_password }}"
+    priv: "*.*:ALL,GRANT"
+  with_items:
+    - '%'
+  when: galera_allow_root_from_any
