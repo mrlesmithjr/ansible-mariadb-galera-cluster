@@ -5,8 +5,10 @@ default-storage-engine=innodb
 innodb_autoinc_lock_mode=2
 query_cache_size=0
 query_cache_type=0
-bind-address=0.0.0.0
-#galera settings
+bind-address={{ galera_cluster_bind_address }}
+
+[galera]
+wsrep_on=ON
 wsrep_node_name={{ ansible_hostname }}
 wsrep_provider=/usr/lib/galera/libgalera_smm.so
 wsrep_cluster_name="{{ galera_cluster_name }}"
