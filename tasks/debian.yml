@@ -16,6 +16,11 @@
     id: "{{ mariadb_debian_repo_key }}"
     state: "present"
 
+- name: debian | Pinning MariaDB Repo
+  template:
+    src: "mariadb_repo.j2"
+    dest: "/etc/apt/preferences.d/mariadb"
+
 - name: debian | adding mariadb repo
   apt_repository:
     repo: "{{ mariadb_debian_repo }}"
@@ -27,7 +32,7 @@
     state: "present"
   with_items:
     - 'mariadb-server'
-    - 'galera-3'
+    # - 'galera-3'
 
 - name: debian | configuring root my.cnf
   template:

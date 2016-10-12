@@ -39,14 +39,14 @@
   ignore_errors: true
   when: not galera_cluster_configured.stat.exists
 
-- name: setup_cluster | configuring temp galera config
-  template:
-    src: "etc/mysql/conf.d/temp.galera.cnf.j2"
-    dest: "/etc/mysql/conf.d/galera.cnf"
-  when: >
-        ansible_os_family == "Debian" and
-        not galera_cluster_configured.stat.exists and
-        inventory_hostname == mysql_master_node
+# - name: setup_cluster | configuring temp galera config
+#   template:
+#     src: "etc/mysql/conf.d/temp.galera.cnf.j2"
+#     dest: "/etc/mysql/conf.d/galera.cnf"
+#   when: >
+#         ansible_os_family == "Debian" and
+#         not galera_cluster_configured.stat.exists and
+#         inventory_hostname == mysql_master_node
 
 - name: setup_cluster | configuring temp galera config
   template:
@@ -58,9 +58,10 @@
         inventory_hostname == mysql_master_node
 
 - name: setup_cluster | bootstrapping galera cluster
-  service:
-    name: "mysql"
-    state: "restarted"
+  command: "galera_new_cluster"
+  # service:
+  #   name: "mysql"
+  #   state: "restarted"
   when: >
         not galera_cluster_configured.stat.exists and
         inventory_hostname == mysql_master_node
@@ -73,14 +74,14 @@
         not galera_cluster_configured.stat.exists and
         inventory_hostname != mysql_master_node
 
-- name: setup_cluster | configuring galera on mysql_master
-  template:
-    src: "etc/mysql/conf.d/galera.cnf.j2"
-    dest: "/etc/mysql/conf.d/galera.cnf"
-  when: >
-        ansible_os_family == "Debian" and
-        not galera_cluster_configured.stat.exists and
-        inventory_hostname == mysql_master_node
+# - name: setup_cluster | configuring galera on mysql_master
+#   template:
+#     src: "etc/mysql/conf.d/galera.cnf.j2"
+#     dest: "/etc/mysql/conf.d/galera.cnf"
+#   when: >
+#         ansible_os_family == "Debian" and
+#         not galera_cluster_configured.stat.exists and
+#         inventory_hostname == mysql_master_node
 
 - name: setup_cluster | configuring galera on mysql_master
   template:
@@ -91,13 +92,13 @@
         not galera_cluster_configured.stat.exists and
         inventory_hostname == mysql_master_node
 
-- name: setup_cluster | restarting galera on mysql_master
-  service:
-    name: "mysql"
-    state: "restarted"
-  when: >
-        not galera_cluster_configured.stat.exists and
-        inventory_hostname == mysql_master_node
+# - name: setup_cluster | restarting galera on mysql_master
+#   service:
+#     name: "mysql"
+#     state: "restarted"
+#   when: >
+#         not galera_cluster_configured.stat.exists and
+#         inventory_hostname == mysql_master_node
 
 - name: setup_cluster | marking galera cluster as configured
   file:
