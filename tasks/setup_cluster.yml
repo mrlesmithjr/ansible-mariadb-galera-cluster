@@ -75,8 +75,9 @@
   when: >
         not galera_cluster_configured.stat.exists and
         inventory_hostname == mysql_master_node and
-        (ansible_distribution == "Ubuntu" and
-        ansible_distribution_version >= '16.04')
+        ((ansible_distribution == "Ubuntu" and
+        ansible_distribution_version >= '16.04') or
+        ansible_distribution == "Debian")
 
 - name: setup_cluster | joining galera cluster
   service:
