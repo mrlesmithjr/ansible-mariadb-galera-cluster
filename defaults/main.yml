@@ -5,6 +5,21 @@
 cacti_db_password: 'cactiuser'
 cacti_db_user: 'cactiuser'
 
+# Defines if root logins should be allowed from any host
+galera_allow_root_from_any: false
+
+# Define bind address for galera cluster
+galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
+# Define interface in which to bind
+# ex. eth0|eth1|enp0s3|enp0s8
+galera_cluster_bind_interface: 'enp0s8'
+
+# Define the name of the cluster
+galera_cluster_name: 'vagrant-test'
+
+# Define Ansible group in which the nodes exist to be part of the cluster
+galera_cluster_nodes_group: 'galera-cluster-nodes'
+
 # Defines debian db password
 # generate using echo password | mkpasswd -s -m sha-512
 galera_deb_db_password: '{{ mariadb_mysql_root_password }}'
@@ -20,19 +35,6 @@ galera_enable_galera_monitoring_script: false
 # Defines if we should enable the MariaDB repo or use version within OS repos.
 galera_enable_mariadb_repo: true
 
-# Defines if root logins should be allowed from any host
-galera_allow_root_from_any: false
-
-# Define the name of the cluster
-galera_cluster_name: 'vagrant-test'
-
-# Define bind address for galera cluster
-galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
-# Define interface in which to bind
-# ex. eth0|eth1|enp0s3|enp0s8
-galera_cluster_bind_interface: 'enp0s8'
-
-galera_cluster_nodes_group: 'galera-cluster-nodes'
 galera_monitor_script_name: 'galeranotify.py'
 galera_monitor_script_path: '/etc/mysql'
 
