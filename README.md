@@ -62,6 +62,24 @@ galera_enable_galera_monitoring_script: false
 # Defines if we should enable the MariaDB repo or use version within OS repos.
 galera_enable_mariadb_repo: true
 
+# Define which network segment this node is in.
+# value is an integer from 0 to 255
+# By default all nodes are placed in the same segment (0)
+# http://galeracluster.com/documentation-webpages/galeraparameters.html#gmcast-segment
+galera_gmcast_segment: '0'
+
+# Address to listen on for Incremental State Transfer.
+# By default this is the <address>:<port+1> from wsrep_node_address.
+galera_ist_recv_addr: '{{ galera_cluster_bind_address }}'
+galera_ist_recv_addr_port: '{{ galera_wsrep_node_address_port|int + 1 }}'
+
+# This option defines the address to which the node will bind in order to
+# receive Incremental State Transfers. When this option is not set, it takes
+# its value from ist.recv_addr or, in the event that that is also not set,
+# from wsrep_node_address. You may find it useful when the node runs behind a
+# NAT or in similar cases where the public and private addresses differ.
+galera_ist_recv_bind: '{{ galera_cluster_bind_address }}'
+
 galera_monitor_script_name: 'galeranotify.py'
 galera_monitor_script_path: '/etc/mysql'
 
@@ -79,6 +97,10 @@ galera_notify_smtp_server: '{{ mariadb_smtp_server }}'
 
 # Defines if the cluster should be reconfigured
 galera_reconfigure_galera: false
+
+galera_wsrep_node_address: '{{ galera_cluster_bind_address }}:{{ galera_wsrep_node_address_port }}'
+
+galera_wsrep_node_address_port: 4567
 
 # MariaDB Repo Info
 mariadb_debian_repo: 'deb [arch=amd64,i386,ppc64el] https://mirrors.evowise.com/mariadb/repo/{{ mariadb_version }}/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} main'
