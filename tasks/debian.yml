@@ -6,6 +6,7 @@
     name: "{{ item }}"
     state: "present"
   with_items:
+    - 'apt-transport-https'
     - 'software-properties-common'
     - 'python-mysqldb'
     - 'rsync'
