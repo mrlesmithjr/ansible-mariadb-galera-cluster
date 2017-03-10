@@ -3,6 +3,11 @@ Role Name
 
 An [Ansible] role to install/configure a [MariaDB-Galera Cluster]
 
+Build Status
+------------
+
+[![Build Status](https://travis-ci.org/mrlesmithjr/ansible-mariadb-galera-cluster.svg?branch=master)](https://travis-ci.org/mrlesmithjr/ansible-mariadb-galera-cluster)
+
 Requirements
 ------------
 
