@@ -1,6 +1,11 @@
 ---
 - include: mysql_root_pw.yml
 
+- name: debian | update package list
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: debian | installing pre-reqs
   apt:
     name: "{{ item }}"
