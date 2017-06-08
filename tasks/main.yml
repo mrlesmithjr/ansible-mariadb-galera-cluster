@@ -15,6 +15,9 @@
 
 - include: setup_cluster.yml
 
+- include: mysql_users.yml
+  tags: mysql-users
+
 - include: galera_monitoring.yml
   tags:
     - config_galera_monitoring
