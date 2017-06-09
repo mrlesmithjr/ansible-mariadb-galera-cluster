@@ -17,6 +17,7 @@
 
 - include: mysql_users.yml
   tags: mysql-users
+  when: mariadb_mysql_users is defined
 
 - include: galera_monitoring.yml
   tags:
