@@ -94,6 +94,20 @@ mariadb_version: '10.1'
 # generate using echo password | mkpasswd -s -m sha-512
 mariadb_mysql_root_password: 'root'
 
+# Define additional MySQL users
+mariadb_mysql_users: []
+#   - name: example
+#     hosts:
+#       - "%"
+#       - "127.0.0.1"
+#       - "::1"
+#       - "localhost"
+#     password: secret
+#     encrypted: no (default)
+#     priv: *.*:USAGE (default}
+#     state: present (default)
+#     append_privs: no (default)
+
 # Define the primary domain name of your environment
 mariadb_pri_domain_name: 'example.org'
 
