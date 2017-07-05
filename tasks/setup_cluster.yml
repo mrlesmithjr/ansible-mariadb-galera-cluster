@@ -1,34 +1,30 @@
 ---
-- name: setup_cluster | configuring db server and galera
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  become: true
-  with_items:
-    - src: 'etc/mysql/debian.cnf.j2'
-      dest: '/etc/mysql/debian.cnf'
-    - src: 'etc/mysql/my.cnf.j2'
-      dest: '/etc/mysql/my.cnf'
-    - src: 'etc/mysql/conf.d/galera.cnf.j2'
-      dest: '/etc/mysql/conf.d/galera.cnf'
-  when: ansible_os_family == "Debian"
-
-- name: setup_cluster | configuring db server and galera
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  become: true
-  with_items:
-#    - src: 'etc/mysql/my.cnf.j2'
-#      dest: '/etc/mysql/my.cnf'
-    - src: 'etc/my.cnf.d/server.cnf.j2'
-      dest: '/etc/my.cnf.d/server.cnf'
-  when: ansible_os_family == "RedHat"
-
 - name: setup_cluster | checking if galera cluster setup
   stat:
     path: "/etc/galera_cluster_configured"
   register: "galera_cluster_configured"
+
+- name: setup_cluster | configuring db server and galera
+  template:
+    src: "{{ item }}.j2"
+    dest: "/{{ item }}"
+  become: true
+  register: "_mariadb_galera_cluster_reconfigured_1"
+  with_items:
+    - 'etc/mysql/debian.cnf'
+    - 'etc/mysql/my.cnf'
+    - 'etc/mysql/conf.d/galera.cnf'
+  when: ansible_os_family == "Debian"
+
+- name: setup_cluster | configuring db server and galera
+  template:
+    src: "{{ item }}.j2"
+    dest: "/{{ item.dest }}"
+  become: true
+  register: "_mariadb_galera_cluster_reconfigured_2"
+  with_items:
+    - 'etc/my.cnf.d/server.cnf'
+  when: ansible_os_family == "RedHat"
 
 - name: setup_cluster | stopping mysql
   service:
@@ -101,6 +97,7 @@
     src: "etc/mysql/conf.d/galera.cnf.j2"
     dest: "/etc/mysql/conf.d/galera.cnf"
   become: true
+  register: "_mariadb_galera_cluster_reconfigured_3"
   when: >
         (ansible_distribution == "Debian" or
         (ansible_distribution == "Ubuntu" and
@@ -113,6 +110,7 @@
     src: "etc/my.cnf.d/server.cnf.j2"
     dest: "/etc/my.cnf.d/server.cnf"
   become: true
+  register: "_mariadb_galera_cluster_reconfigured_4"
   when: >
         ansible_os_family == "RedHat" and
         not galera_cluster_configured.stat.exists and
@@ -136,3 +134,49 @@
     state: "touch"
   become: true
   when: not galera_cluster_configured.stat.exists
+
+# Only restart if cluster has already been configured
+- name: setup_cluster | Restarting MySQL (Master)
+  service:
+    name: "mysql"
+    state: "restarted"
+  become: true
+  register: "_mariadb_galera_cluster_master_restarted"
+  when: >
+        (galera_cluster_configured['stat']['exists'] and
+        inventory_hostname == galera_mysql_master_node) and
+        (_mariadb_galera_cluster_reconfigured_1['changed'] or
+        _mariadb_galera_cluster_reconfigured_2['changed'] or
+        _mariadb_galera_cluster_reconfigured_3['changed'] or
+        _mariadb_galera_cluster_reconfigured_4['changed'])
+
+- name: setup_cluster | Waiting For MySQL (Master)
+  wait_for:
+    port: "{{ mariadb_mysql_port }}"
+    host: "{{ galera_cluster_bind_address }}"
+  when: >
+        inventory_hostname == galera_mysql_master_node and
+        _mariadb_galera_cluster_master_restarted['changed']
+
+# Only restart if cluster has already been configured
+- name: setup_cluster | Restarting MySQL (Non-Master)
+  service:
+    name: "mysql"
+    state: "restarted"
+  become: true
+  register: "_mariadb_galera_cluster_non_master_restarted"
+  when: >
+        (galera_cluster_configured['stat']['exists'] and
+        inventory_hostname != galera_mysql_master_node) and
+        (_mariadb_galera_cluster_reconfigured_1['changed'] or
+        _mariadb_galera_cluster_reconfigured_2['changed'] or
+        _mariadb_galera_cluster_reconfigured_3['changed'] or
+        _mariadb_galera_cluster_reconfigured_4['changed'])
+
+- name: setup_cluster | Waiting For MySQL (Non-Master)
+  wait_for:
+    port: "{{ mariadb_mysql_port }}"
+    host: "{{ galera_cluster_bind_address }}"
+  when: >
+        inventory_hostname != galera_mysql_master_node and
+        _mariadb_galera_cluster_non_master_restarted['changed']
