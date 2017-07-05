@@ -1,7 +1,5 @@
 ---
 # tasks file for ansible-mariadb-galera-cluster
-- include: update_etc_hosts.yml
-
 - include: unconfigure_cluster.yml
   when: >
         galera_reconfigure_galera is defined and
