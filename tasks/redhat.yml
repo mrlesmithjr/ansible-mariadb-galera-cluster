@@ -7,6 +7,7 @@
     dest: "/etc/yum.repos.d/MariaDB.repo"
     owner: "root"
     group: "root"
+  become: true
   register: repo_added
 
 - name: redhat | installing pre-reqs
@@ -14,6 +15,7 @@
     name: "{{ item }}"
     state: "present"
     update_cache: yes
+  become: true
   with_items:
     - 'MySQL-python'
     - 'socat'
@@ -24,6 +26,7 @@
   yum:
     name: "{{ item }}"
     state: "present"
+  become: true
   with_items:
     - 'MariaDB-server'
     - 'galera'
@@ -34,6 +37,7 @@
   dnf:
     name: "{{ item }}"
     state: present
+  become: true
   with_items:
     - 'MariaDB-server'
     - 'galera'
@@ -46,3 +50,4 @@
     name: "mysql"
     state: "started"
     enabled: yes
+  become: true

@@ -6,6 +6,7 @@
     host: "{{ cacti_server }}"
     priv: "*.*:SUPER,PROCESS"
     state: "present"
+  become: true
   tags:
     - cacti_monitoring
   run_once: true
@@ -19,6 +20,7 @@
     host: "{{ cacti_server_fqdn }}"
     priv: "*.*:SUPER,PROCESS"
     state: "present"
+  become: true
   tags:
     - cacti_monitoring
   run_once: true

@@ -5,6 +5,7 @@
     question: "{{ item.question }}"
     value: "{{ item.value }}"
     vtype: "password"
+  become: true
   changed_when: false
   no_log: true
   with_items:

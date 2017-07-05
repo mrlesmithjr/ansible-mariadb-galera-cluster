@@ -3,6 +3,7 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+  become: true
   with_items:
     - src: 'etc/mysql/debian.cnf.j2'
       dest: '/etc/mysql/debian.cnf'
@@ -16,6 +17,7 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+  become: true
   with_items:
 #    - src: 'etc/mysql/my.cnf.j2'
 #      dest: '/etc/mysql/my.cnf'
@@ -32,10 +34,12 @@
   service:
     name: "mysql"
     state: "stopped"
+  become: true
   when: not galera_cluster_configured.stat.exists
 
 - name: setup_cluster | killing lingering mysql processes
   command: "pkill mysqld"
+  become: true
   ignore_errors: true
   when: not galera_cluster_configured.stat.exists
 
@@ -43,6 +47,7 @@
   template:
     src: "etc/mysql/conf.d/temp.galera.cnf.j2"
     dest: "/etc/mysql/conf.d/galera.cnf"
+  become: true
   when: >
         (ansible_distribution == "Debian" or
         (ansible_distribution == "Ubuntu" and
@@ -54,6 +59,7 @@
   template:
     src: "etc/my.cnf.d/temp.server.cnf.j2"
     dest: "/etc/my.cnf.d/server.cnf"
+  become: true
   when: >
         ansible_os_family == "RedHat" and
         not galera_cluster_configured.stat.exists and
@@ -63,6 +69,7 @@
   service:
     name: "mysql"
     state: "restarted"
+  become: true
   when: >
         (ansible_distribution == "Debian" or
         (ansible_distribution == "Ubuntu" and
@@ -72,6 +79,7 @@
 
 - name: setup_cluster | bootstrapping galera cluster
   command: "/usr/bin/galera_new_cluster"
+  become: true
   when: >
         not galera_cluster_configured.stat.exists and
         inventory_hostname == galera_mysql_master_node and
@@ -83,6 +91,7 @@
   service:
     name: "mysql"
     state: "restarted"
+  become: true
   when: >
         not galera_cluster_configured.stat.exists and
         inventory_hostname != galera_mysql_master_node
@@ -91,6 +100,7 @@
   template:
     src: "etc/mysql/conf.d/galera.cnf.j2"
     dest: "/etc/mysql/conf.d/galera.cnf"
+  become: true
   when: >
         (ansible_distribution == "Debian" or
         (ansible_distribution == "Ubuntu" and
@@ -102,6 +112,7 @@
   template:
     src: "etc/my.cnf.d/server.cnf.j2"
     dest: "/etc/my.cnf.d/server.cnf"
+  become: true
   when: >
         ansible_os_family == "RedHat" and
         not galera_cluster_configured.stat.exists and
@@ -111,6 +122,7 @@
   service:
     name: "mysql"
     state: "restarted"
+  become: true
   when: >
         (ansible_distribution == "Debian" or
         (ansible_distribution == "Ubuntu" and
@@ -122,4 +134,5 @@
   file:
     path: "/etc/galera_cluster_configured"
     state: "touch"
+  become: true
   when: not galera_cluster_configured.stat.exists

@@ -5,11 +5,13 @@
   apt:
     update_cache: yes
     cache_valid_time: 3600
+  become: true
 
 - name: debian | installing pre-reqs
   apt:
     name: "{{ item }}"
     state: "present"
+  become: true
   with_items:
     - 'apt-transport-https'
     - 'software-properties-common'
@@ -21,6 +23,7 @@
     keyserver: "{{ mariadb_debian_repo_keyserver }}"
     id: "0xcbcb082a1bb943db"
     state: "present"
+  become: true
   when: >
         ansible_distribution == "Debian" or
         (ansible_distribution == "Ubuntu" and
@@ -31,6 +34,7 @@
     keyserver: "{{ mariadb_debian_repo_keyserver }}"
     id: "0xF1656F24C74CD1D8"
     state: "present"
+  become: true
   when: >
         (ansible_distribution == "Ubuntu" and
         ansible_distribution_version >= '16.04')
@@ -39,16 +43,19 @@
   template:
     src: "mariadb_repo.j2"
     dest: "/etc/apt/preferences.d/mariadb"
+  become: true
 
 - name: debian | adding mariadb repo
   apt_repository:
     repo: "{{ mariadb_debian_repo }}"
     state: "present"
+  become: true
 
 - name: debian | installing mariadb-galera packages
   apt:
     name: "{{ item }}"
     state: "present"
+  become: true
   with_items:
     - 'mariadb-server'
     # - 'galera-3'
@@ -60,6 +67,7 @@
     owner: "root"
     group: "root"
     mode: "u=rw,g=,o="
+  become: true
 
 - name: debian | adding debian-sys-maintenance permissions to mysql
   mysql_user:
@@ -67,3 +75,4 @@
     password: "{{ galera_deb_db_password }}"
     priv: "*.*:ALL,GRANT"
     state: "present"
+  become: true

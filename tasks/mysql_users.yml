@@ -8,6 +8,7 @@
     priv: "{{ item.0.priv | default('*.*:USAGE') }}"
     state: "{{ item.0.state | default('present') }}"
     append_privs: "{{ item.0.append_privs | default('no') }}"
+  become: true
   with_subelements:
     - "{{ mariadb_mysql_users }}"
     - hosts
