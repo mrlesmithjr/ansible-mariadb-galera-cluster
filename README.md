@@ -140,6 +140,8 @@ mariadb_redhat_repo: 'http://yum.mariadb.org/{{ mariadb_version }}/{{ ansible_di
 mariadb_redhat_repo_key: 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
 mariadb_version: '10.1'
 
+mariadb_mysql_mem_multiplier: .25
+
 # Define listen port
 mariadb_mysql_port: 3306
 
@@ -159,7 +161,7 @@ mariadb_mysql_settings:
   innodb_write_io_threads: 4
   join_buffer_size: 1M
   #Default is 16M
-  key_buffer_size: '{{ (ansible_memtotal_mb | int * mysql_mem_multiplier) | round | int }}M'
+  key_buffer_size: '{{ (ansible_memtotal_mb | int * mariadb_mysql_mem_multiplier) | round | int }}M'
   max_allowed_packet: 16M
   max_binlog_size: 100M
   max_connections: 150
