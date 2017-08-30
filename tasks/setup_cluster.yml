@@ -19,7 +19,7 @@
 - name: setup_cluster | configuring db server and galera
   template:
     src: "{{ item }}.j2"
-    dest: "/{{ item.dest }}"
+    dest: "/{{ item }}"
   become: true
   register: "_mariadb_galera_cluster_reconfigured_2"
   with_items:
