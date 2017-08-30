@@ -22,4 +22,5 @@ galaxy_info:
   categories:
   - database
   - database:sql
-dependencies: []
+dependencies:
+- src: https://github.com/mrlesmithjr/ansible-etc-hosts
