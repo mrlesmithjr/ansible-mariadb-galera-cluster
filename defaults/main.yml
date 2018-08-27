@@ -105,6 +105,7 @@ mariadb_mysql_root_password: 'root'
 mariadb_mysql_settings:
   collation_server: 'latin1_swedish_ci'
   character_set_client: 'latin1'
+  datadir: /var/lib/mysql
   expire_logs_days: 10
   # ON|OFF
   innodb_buffer_pool_size: 128M
