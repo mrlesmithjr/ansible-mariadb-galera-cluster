@@ -95,6 +95,11 @@ mariadb_mysql_mem_multiplier: .25
 # Add the posibility to adjust the OOM score (only works for SystemD)
 mariadb_oom_score_adjust: 0
 
+# Add the posibility to adjust the LimitNOFILE (only works for SystemD)
+# default: 0 does not tamper LimitNOFILE
+# notice for SystemD: 0 does not mean 'unlimited', use 'infinity' for unlimited
+mariadb_max_open_files: 0
+
 # Define listen port
 mariadb_mysql_port: 3306
 
