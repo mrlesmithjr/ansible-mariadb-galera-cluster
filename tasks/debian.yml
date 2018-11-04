@@ -51,6 +51,13 @@
     state: "present"
   become: true
 
+- name: redhat | add an overrides file
+  template:
+    src: "etc/mariadb_overrides.cnf.j2"
+    dest: "/etc/my.cnf.d/overrides.cnf"
+  become: true
+  when: mariadb_config_overrides is defined
+
 - name: debian | installing mariadb-galera packages
   apt:
     name: "{{ item }}"
