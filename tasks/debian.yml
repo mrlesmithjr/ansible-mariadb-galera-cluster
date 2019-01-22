@@ -44,12 +44,14 @@
     src: "mariadb_repo.j2"
     dest: "/etc/apt/preferences.d/mariadb"
   become: true
+  when: galera_enable_mariadb_repo == 'true'
 
 - name: debian | adding mariadb repo
   apt_repository:
     repo: "{{ mariadb_debian_repo }}"
     state: "present"
   become: true
+  when: galera_enable_mariadb_repo == 'true'
 
 - name: redhat | add an overrides file
   template:
@@ -66,6 +68,7 @@
   with_items:
     - 'mariadb-server'
     # - 'galera-3'
+  when: galera_enable_mariadb_repo == 'true'
 
 - name: debian | configuring root my.cnf
   template:
