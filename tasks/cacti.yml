@@ -11,7 +11,7 @@
     - cacti_monitoring
   run_once: true
   when: >
-        cacti_server is defined
+    cacti_server is defined
 
 - name: debian | adding cacti db user for monitoring
   mysql_user:
@@ -25,4 +25,4 @@
     - cacti_monitoring
   run_once: true
   when: >
-        cacti_server_fqdn is defined
+    cacti_server_fqdn is defined

@@ -2,7 +2,7 @@
 - hosts: all
   become: true
   vars:
-    mariadb_pri_domain_name: 'test.vagrant.local'
+    mariadb_pri_domain_name: "test.vagrant.local"
   roles:
     - role: ansible-etc-hosts
   tasks:
@@ -13,8 +13,8 @@
       with_items:
         - libselinux-python
       when: >
-            (ansible_os_family == "RedHat" and
-            ansible_distribution == "Fedora")
+        (ansible_os_family == "RedHat" and
+        ansible_distribution == "Fedora")
 
     - name: pre-reqs
       yum:
@@ -23,14 +23,14 @@
       with_items:
         - libselinux-python
       when: >
-            (ansible_os_family == "RedHat" and
-            ansible_distribution != "Fedora")
+        (ansible_os_family == "RedHat" and
+        ansible_distribution != "Fedora")
 
 - hosts: galera-cluster-nodes
   become: true
   vars:
-    galera_cluster_bind_address: '{{ ansible_eth1.ipv4.address }}'  #'{{ ansible_enp0s8.ipv4.address }}'
-    mariadb_pri_domain_name: 'test.vagrant.local'
+    galera_cluster_bind_address: "{{ ansible_eth1.ipv4.address }}" #'{{ ansible_enp0s8.ipv4.address }}'
+    mariadb_pri_domain_name: "test.vagrant.local"
   roles:
     - role: ansible-mariadb-galera-cluster
   tasks:

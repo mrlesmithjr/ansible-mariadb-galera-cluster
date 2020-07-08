@@ -9,8 +9,8 @@
   changed_when: false
   no_log: true
   with_items:
-    - question: 'mysql-server/root_password'
-      value: '{{ mariadb_mysql_root_password }}'
-    - question: 'mysql-server/root_password_again'
-      value: '{{ mariadb_mysql_root_password }}'
+    - question: "mysql-server/root_password"
+      value: "{{ mariadb_mysql_root_password }}"
+    - question: "mysql-server/root_password_again"
+      value: "{{ mariadb_mysql_root_password }}"
   when: ansible_os_family == "Debian"

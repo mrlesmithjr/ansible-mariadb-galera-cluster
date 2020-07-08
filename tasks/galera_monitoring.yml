@@ -15,8 +15,8 @@
     state: "restarted"
   become: true
   when: >
-        inventory_hostname == galera_mysql_master_node and
-        galera_monitoring_updated.changed
+    inventory_hostname == galera_mysql_master_node and
+    galera_monitoring_updated.changed
 
 - name: galera_monitoring | waiting for mysql to start on master
   wait_for:
@@ -30,5 +30,5 @@
     state: "restarted"
   become: true
   when: >
-        inventory_hostname != galera_mysql_master_node and
-        galera_monitoring_updated.changed
+    inventory_hostname != galera_mysql_master_node and
+    galera_monitoring_updated.changed

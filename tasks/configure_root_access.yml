@@ -7,9 +7,9 @@
   become: true
   run_once: true
   with_items:
-    - '{{ ansible_hostname }}'
-    - '127.0.0.1'
-    - '::1'
+    - "{{ ansible_hostname }}"
+    - "127.0.0.1"
+    - "::1"
     - localhost
 
 - name: configure_root_access | configuring root my.cnf
@@ -29,9 +29,9 @@
     password: "{{ mariadb_mysql_root_password }}"
   become: true
   with_items:
-    - '{{ ansible_hostname }}'
-    - '127.0.0.1'
-    - '::1'
+    - "{{ ansible_hostname }}"
+    - "127.0.0.1"
+    - "::1"
     - localhost
 
 - name: configure_root_access | updating root passwords (allow from anywhere)
@@ -42,5 +42,5 @@
     priv: "*.*:ALL,GRANT"
   become: true
   with_items:
-    - '%'
-  when: galera_allow_root_from_any
+    - "%"
+  when: galera_allow_root_from_any|bool

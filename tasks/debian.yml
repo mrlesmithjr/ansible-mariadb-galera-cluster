@@ -9,14 +9,14 @@
 
 - name: debian | installing pre-reqs
   apt:
-    name: "{{ item }}"
+    name:
+      - "apt-transport-https"
+      - "software-properties-common"
+      - "python-mysqldb"
+      - "rsync"
     state: "present"
   become: true
-  with_items:
-    - 'apt-transport-https'
-    - 'software-properties-common'
-    - 'python-mysqldb'
-    - 'rsync'
+  loop:
 
 - name: debian | Adding MariaDB Repo Keys
   apt_key:
@@ -25,9 +25,9 @@
     state: "present"
   become: true
   when: >
-        ansible_distribution == "Debian" or
-        (ansible_distribution == "Ubuntu" and
-        ansible_distribution_version <= '14.04')
+    ansible_distribution == "Debian" or
+    (ansible_distribution == "Ubuntu" and
+    ansible_distribution_version <= '14.04')
 
 - name: debian | Adding MariaDB Repo Keys
   apt_key:
@@ -35,23 +35,23 @@
     id: "0xF1656F24C74CD1D8"
     state: "present"
   become: true
-  when: >
-        (ansible_distribution == "Ubuntu" and
-        ansible_distribution_version >= '16.04')
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version('16.04', '>=')
 
 - name: debian | Pinning MariaDB Repo
   template:
     src: "mariadb_repo.j2"
     dest: "/etc/apt/preferences.d/mariadb"
   become: true
-  when: galera_enable_mariadb_repo == 'true'
+  when: galera_enable_mariadb_repo|bool
 
 - name: debian | adding mariadb repo
   apt_repository:
     repo: "{{ mariadb_debian_repo }}"
     state: "present"
   become: true
-  when: galera_enable_mariadb_repo == 'true'
+  when: galera_enable_mariadb_repo|bool
 
 - name: redhat | add an overrides file
   template:
@@ -62,13 +62,11 @@
 
 - name: debian | installing mariadb-galera packages
   apt:
-    name: "{{ item }}"
+    name:
+      - "mariadb-server"
     state: "present"
   become: true
-  with_items:
-    - 'mariadb-server'
-    # - 'galera-3'
-  when: galera_enable_mariadb_repo == 'true'
+  when: galera_enable_mariadb_repo|bool
 
 - name: debian | configuring root my.cnf
   template:
@@ -82,7 +80,8 @@
 - name: debian | adding debian-sys-maintenance permissions to mysql
   mysql_user:
     name: "debian-sys-maint"
-    password: "{{ galera_deb_db_password }}"
     priv: "*.*:ALL,GRANT"
     state: "present"
+    password: "{{ galera_deb_db_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
   become: true

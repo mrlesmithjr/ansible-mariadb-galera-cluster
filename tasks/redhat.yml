@@ -17,10 +17,10 @@
     update_cache: yes
   become: true
   with_items:
-    - 'MySQL-python'
-    - 'socat'
+    - "MySQL-python"
+    - "socat"
   when: >
-        ansible_distribution != "Fedora"
+    ansible_distribution != "Fedora"
 
 - name: Precreate /etc/my.cnf.d in case we need to add mariadb_config_overrides file
   file:
@@ -48,10 +48,10 @@
     state: "present"
   become: true
   with_items:
-    - 'MariaDB-server'
-    - 'galera'
+    - "MariaDB-server"
+    - "galera"
   when: >
-        ansible_distribution != "Fedora"
+    ansible_distribution != "Fedora"
 
 - name: redhat | installing mariadb mysql
   dnf:
@@ -59,11 +59,11 @@
     state: present
   become: true
   with_items:
-    - 'MariaDB-server'
-    - 'galera'
-    - 'MySQL-python'
+    - "MariaDB-server"
+    - "galera"
+    - "MySQL-python"
   when: >
-        ansible_distribution == "Fedora"
+    ansible_distribution == "Fedora"
 
 - name: Remove migrated-from-my.cnf-settings.conf that is causing MariaDB to not start
   file:
