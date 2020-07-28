@@ -2,11 +2,11 @@
 
 [client]
 port = 3306
-socket = /var/run/mysqld/mysqld.sock
+socket = {{ mariadb_login_unix_socket }}
 
 [mysqld_safe]
 nice = 0
-socket = /var/run/mysqld/mysqld.sock
+socket = {{ mariadb_login_unix_socket }}
 
 [mysqld]
 basedir = /usr
@@ -23,7 +23,7 @@ port = {{ mariadb_mysql_port }}
 query_cache_limit = {{ mariadb_mysql_settings['query_cache_limit'] }}
 query_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
 skip-external-locking
-socket = /var/run/mysqld/mysqld.sock
+socket = {{ mariadb_login_unix_socket }}
 thread_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
 thread_stack = {{ mariadb_mysql_settings['thread_stack'] }}
 tmpdir = /tmp

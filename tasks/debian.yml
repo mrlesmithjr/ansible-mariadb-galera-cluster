@@ -83,5 +83,5 @@
     priv: "*.*:ALL,GRANT"
     state: "present"
     password: "{{ galera_deb_db_password }}"
-    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_unix_socket: "{{ mariadb_login_unix_socket }}"
   become: true

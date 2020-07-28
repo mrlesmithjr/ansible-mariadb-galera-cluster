@@ -1,5 +1,7 @@
 ---
 # tasks file for ansible-mariadb-galera-cluster
+- include: set_facts.yml
+
 - include: unconfigure_cluster.yml
   when: >
     galera_reconfigure_galera is defined and

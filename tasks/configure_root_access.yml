@@ -1,8 +1,9 @@
 ---
 - name: configure_root_access | updating root passwords
   mysql_user:
-    name: root
     host: "{{ item }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    name: root
     password: "{{ mariadb_mysql_root_password }}"
   become: true
   run_once: true
@@ -24,8 +25,9 @@
 
 - name: configure_root_access | updating root passwords
   mysql_user:
-    name: root
     host: "{{ item }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    name: root
     password: "{{ mariadb_mysql_root_password }}"
   become: true
   with_items:
@@ -36,8 +38,9 @@
 
 - name: configure_root_access | updating root passwords (allow from anywhere)
   mysql_user:
-    name: root
     host: "{{ item }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    name: root
     password: "{{ mariadb_mysql_root_password }}"
     priv: "*.*:ALL,GRANT"
   become: true
