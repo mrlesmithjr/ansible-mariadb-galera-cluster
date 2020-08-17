@@ -4,10 +4,10 @@
 host     = localhost
 user     = debian-sys-maint
 password = {{ galera_deb_db_password }}
-socket   = "{{ mariadb_login_unix_socket }}
+socket   = {{ mariadb_login_unix_socket }}
 [mysql_upgrade]
 host     = localhost
 user     = debian-sys-maint
 password = {{ galera_deb_db_password }}
-socket   = "{{ mariadb_login_unix_socket }}
+socket   = {{ mariadb_login_unix_socket }}
 basedir  = /usr

@@ -11,6 +11,11 @@ galera_allow_root_from_any: false
 # Define bind address for galera cluster
 galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
 
+# bind address for MariaDB's 3306 port.
+# By default takes the value of the galera cluster IP, but can be overriden
+# to 0.0.0.0 (for example) to allow MySQL connections to localhost
+mariadb_bind_address: "{{ galera_cluster_bind_address }}"
+
 # Define interface in which to bind
 # ex. eth0|eth1|enp0s3|enp0s8
 galera_cluster_bind_interface: "enp0s8"
@@ -119,13 +124,22 @@ mariadb_mysql_settings:
   max_binlog_size: 100M
   query_cache_limit: 1M
   query_cache_size: 16M
-  thread_cache_size: 8
+  # MariaDB default: https://mariadb.com/kb/en/server-system-variables/#thread_cache_size
+  thread_cache_size: 256
   thread_stack: 192K
 
 # If this is defined it will create a file with overrides
 # mariadb_config_overrides:
 #   mariadb:
 #     max_connections: 2048
+
+# Create these MariaDB databases during installation
+# Example:
+# mariadb_databases:
+#   - name: keystone
+#   - name: mydb
+#     init_script: files/init_mydb.sql
+mariadb_databases: []
 
 # Define additional MySQL users
 mariadb_mysql_users: []
@@ -149,3 +163,59 @@ mariadb_smtp_domain_name: "{{ mariadb_pri_domain_name }}"
 
 # Define smtp server to send email through
 mariadb_smtp_server: "smtp.{{ mariadb_pri_domain_name }}"
+
+# Character sets. MariaDB's default: latin1
+mariadb_charset_server: utf8mb4
+mariadb_collation_server: utf8mb4_general_ci
+mariadb_charset_client: utf8mb4
+
+# What percentage of system memory to use for InnoDB row cache
+mariadb_innodb_mem_multiplier: 0.50
+
+# Only used internally
+mariadb_one_gig_bytes: "{{ 1024 * 1024 * 1024 }}"
+
+# Amount of memory to use for InnoDB row cache.
+# Overrides "mariadb_innodb_mem_multiplier" setting.
+# If you don't set this in bytes (so MB or GB), the pool instances calculation
+# below will fail
+mariadb_innodb_buffer_pool_size: >-
+  {{ (ansible_memtotal_mb|int * mariadb_innodb_mem_multiplier * 1024 * 1024)
+  | round | int }}
+
+# https://mariadb.com/kb/en/innodb-buffer-pool/#innodb_buffer_pool_instances
+mariadb_innodb_buffer_pool_instances: >-
+  {% if mariadb_innodb_buffer_pool_size|int > mariadb_one_gig_bytes %}{{
+  (mariadb_innodb_buffer_pool_size|int / mariadb_one_gig_bytes) | abs | int
+  }}{% else %}1{% endif %}
+
+# Maximum allowed concurrent connections. MySQL default is 151
+mariadb_max_connections: auto
+
+# Queries that take more time than 'mariadb_long_query_time' to complete are
+# considered as slow. Values in seconds or 'auto' for the MySQL default (10)
+mariadb_long_query_time: auto
+
+# Enable logging of slow queries
+mariadb_slow_query_log_enabled: false
+
+# The calculation below only counts real CPU cores, not SMT ones which MariaDB
+# rightfully does not like.
+mariadb_real_cpus: "{{ ansible_processor_count * ansible_processor_cores }}"
+
+# MariaDB default: 4
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_read_io_threads
+mariadb_innodb_read_io_threads: >-
+  {% if mariadb_real_cpus|int > 8
+  %}{{ mariadb_real_cpus|int / 2 | abs | int }}{%
+  else %}4{% endif %}
+
+# MariaDB default: 4
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_write_io_threads
+mariadb_innodb_write_io_threads: >-
+  {% if mariadb_real_cpus|int > 8
+  %}{{ mariadb_real_cpus|int / 2 | abs | int }}{%
+  else %}4{% endif %}
+
+# https://mariadb.com/kb/en/mariadb-memory-allocation/#swappiness
+mariadb_swappiness: "1"

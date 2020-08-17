@@ -12,7 +12,7 @@ socket = {{ mariadb_login_unix_socket }}
 basedir = /usr
 datadir	= {{ mariadb_mysql_settings['datadir'] }}
 expire_logs_days = {{ mariadb_mysql_settings['expire_logs_days'] }}
-key_buffer = {{ mariadb_mysql_settings['key_buffer_size'] }}
+key_buffer_size = {{ mariadb_mysql_settings['key_buffer_size'] }}
 lc-messages-dir = /usr/share/mysql
 log_error = /var/log/mysql/error.log
 max_allowed_packet = {{ mariadb_mysql_settings['max_allowed_packet'] }}
@@ -24,10 +24,36 @@ query_cache_limit = {{ mariadb_mysql_settings['query_cache_limit'] }}
 query_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
 skip-external-locking
 socket = {{ mariadb_login_unix_socket }}
-thread_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
+thread_cache_size = {{ mariadb_mysql_settings['thread_cache_size'] }}
 thread_stack = {{ mariadb_mysql_settings['thread_stack'] }}
 tmpdir = /tmp
 user = mysql
+
+character-set-server  = {{ mariadb_charset_server }}
+collation-server      = {{ mariadb_collation_server }}
+init-connect          = 'SET NAMES {{ mariadb_charset_server }}'
+
+{% if mariadb_innodb_buffer_pool_size | default('auto') != "auto" %}
+innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
+{% endif %}
+{% if mariadb_innodb_buffer_pool_instances | default('auto') != "auto" %}
+innodb_buffer_pool_instances = {{ mariadb_innodb_buffer_pool_instances }}
+{% endif %}
+{% if mariadb_innodb_read_io_threads | default('auto') != "auto" %}
+innodb_read_io_threads = {{ mariadb_innodb_read_io_threads }}
+{% endif %}
+{% if mariadb_innodb_write_io_threads | default('auto') != "auto" %}
+innodb_write_io_threads = {{ mariadb_innodb_write_io_threads }}
+{% endif %}
+{% if mariadb_max_connections | default('auto') != "auto" %}
+max_connections = {{ mariadb_max_connections }}
+{% endif %}
+{% if mariadb_slow_query_log_enabled %}
+slow_query_log
+{% endif %}
+{% if mariadb_long_query_time | default('auto') != "auto" %}
+long_query_time = {{ mariadb_long_query_time }}
+{% endif %}
 
 [mysqldump]
 max_allowed_packet = 16M
@@ -35,8 +61,9 @@ quick
 quote-names
 
 [mysql]
+default-character-set		= {{ mariadb_charset_client }}
 
 [isamchk]
-key_buffer = 16M
+key_buffer_size = 16M
 
 !includedir /etc/mysql/conf.d/
