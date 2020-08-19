@@ -11,6 +11,11 @@ galera_allow_root_from_any: false
 # Define bind address for galera cluster
 galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
 
+# bind address for MariaDB's 3306 port.
+# By default takes the value of the galera cluster IP, but can be overriden
+# to 0.0.0.0 (for example) to allow MySQL connections to localhost
+mariadb_bind_address: "{{ galera_cluster_bind_address }}"
+
 # Define interface in which to bind
 # ex. eth0|eth1|enp0s3|enp0s8
 galera_cluster_bind_interface: "enp0s8"
