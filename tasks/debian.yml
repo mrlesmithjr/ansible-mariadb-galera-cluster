@@ -75,6 +75,7 @@
     owner: "root"
     group: "root"
     mode: "u=rw,g=,o="
+  no_log: true
   become: true
 
 - name: debian | adding debian-sys-maintenance permissions to mysql
@@ -84,4 +85,5 @@
     state: "present"
     password: "{{ galera_deb_db_password }}"
     login_unix_socket: "{{ mariadb_login_unix_socket }}"
+  no_log: true
   become: true
