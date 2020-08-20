@@ -12,7 +12,7 @@ socket = {{ mariadb_login_unix_socket }}
 basedir = /usr
 datadir	= {{ mariadb_mysql_settings['datadir'] }}
 expire_logs_days = {{ mariadb_mysql_settings['expire_logs_days'] }}
-key_buffer = {{ mariadb_mysql_settings['key_buffer_size'] }}
+key_buffer_size = {{ mariadb_mysql_settings['key_buffer_size'] }}
 lc-messages-dir = /usr/share/mysql
 log_error = /var/log/mysql/error.log
 max_allowed_packet = {{ mariadb_mysql_settings['max_allowed_packet'] }}
@@ -37,6 +37,6 @@ quote-names
 [mysql]
 
 [isamchk]
-key_buffer = 16M
+key_buffer_size = 16M
 
 !includedir /etc/mysql/conf.d/
