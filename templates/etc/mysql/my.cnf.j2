@@ -24,7 +24,7 @@ query_cache_limit = {{ mariadb_mysql_settings['query_cache_limit'] }}
 query_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
 skip-external-locking
 socket = {{ mariadb_login_unix_socket }}
-thread_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
+thread_cache_size = {{ mariadb_mysql_settings['thread_cache_size'] }}
 thread_stack = {{ mariadb_mysql_settings['thread_stack'] }}
 tmpdir = /tmp
 user = mysql
