@@ -12,13 +12,12 @@
 
 - name: redhat | installing pre-reqs
   yum:
-    name: "{{ item }}"
+    name:
+      - "MySQL-python"
+      - "socat"
     state: "present"
     update_cache: yes
   become: true
-  with_items:
-    - "MySQL-python"
-    - "socat"
   when: >
     ansible_distribution != "Fedora"
 
@@ -44,24 +43,22 @@
 
 - name: redhat | installing mariadb mysql
   yum:
-    name: "{{ item }}"
+    name:
+      - "MariaDB-server"
+      - "galera"
     state: "present"
   become: true
-  with_items:
-    - "MariaDB-server"
-    - "galera"
   when: >
     ansible_distribution != "Fedora"
 
 - name: redhat | installing mariadb mysql
   dnf:
-    name: "{{ item }}"
+    name:
+      - "MariaDB-server"
+      - "galera"
+      - "MySQL-python"
     state: present
   become: true
-  with_items:
-    - "MariaDB-server"
-    - "galera"
-    - "MySQL-python"
   when: >
     ansible_distribution == "Fedora"
 
