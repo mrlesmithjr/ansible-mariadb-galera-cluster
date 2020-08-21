@@ -2,6 +2,15 @@
 # tasks file for ansible-mariadb-galera-cluster
 - include: set_facts.yml
 
+- name: Ensure NIC specified in 'galera_cluster_bind_interface' exists
+  assert:
+    that:
+      - galera_cluster_bind_interface in ansible_interfaces
+    fail_msg: >-
+      The NIC name '{{ galera_cluster_bind_interface }}' specified in
+      'galera_cluster_bind_interface' does not exist on the target host.
+      Available interfaces are: {{ ansible_interfaces | join(',') }}.
+
 - include: unconfigure_cluster.yml
   when: >
     galera_reconfigure_galera is defined and
