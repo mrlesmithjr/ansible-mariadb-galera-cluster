@@ -1,0 +1,2 @@
+---
+mariadb_login_unix_socket: /var/lib/mysql/mysql.sock
