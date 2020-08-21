@@ -127,6 +127,14 @@ mariadb_mysql_settings:
 #   mariadb:
 #     max_connections: 2048
 
+# Create these MariaDB databases during installation
+# Example:
+# mariadb_databases:
+#   - name: keystone
+#   - name: mydb
+#     init_script: files/init_mydb.sql
+mariadb_databases: []
+
 # Define additional MySQL users
 mariadb_mysql_users: []
 #   - name: example

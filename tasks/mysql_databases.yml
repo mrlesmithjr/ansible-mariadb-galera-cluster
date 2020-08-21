@@ -1,0 +1,43 @@
+---
+# Borrowed from percona xtradb cluster ansible role:
+# https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/postinstall.yml
+# Many thanks to Cedric DELGEHIER
+- name: Create the databases
+  mysql_db:
+    name: "{{ item.name }}"
+    state: present
+    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+  with_items: "{{ mariadb_databases }}"
+  become: true
+  register: _db
+
+- name: Copy database init scripts
+  copy:
+    src: "{{ item.item.init_script }}"
+    dest: "/tmp/{{ item.item.init_script | basename }}"
+    mode: "0600"
+  with_items: "{{ _db.results }}"
+  when:
+    - item.changed
+    - item.item.init_script is defined
+
+- name: Initialise databases
+  mysql_db:
+    name: "{{ item.item.name }}"
+    state: import
+    target: "/tmp/{{ item.item.init_script | basename }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+  with_items: "{{ _db.results }}"
+  become: true
+  when:
+    - item.changed
+    - item.item.init_script is defined
+
+- name: Delete init scripts from the server
+  file:
+    name: "/tmp/{{ item.item.init_script | basename }}"
+    state: absent
+  with_items: "{{ _db.results }}"
+  when:
+    - item.changed
+    - item.item.init_script is defined
