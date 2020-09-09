@@ -9,11 +9,7 @@
 
 - name: debian | installing pre-reqs
   apt:
-    name:
-      - "apt-transport-https"
-      - "software-properties-common"
-      - "python-mysqldb"
-      - "rsync"
+    name: "{{ mariadb_pre_req_packages }}"
     state: "present"
   become: true
   loop:

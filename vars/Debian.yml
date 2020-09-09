@@ -1,0 +1,7 @@
+---
+mariadb_login_unix_socket: /var/run/mysqld/mysqld.sock
+mariadb_pre_req_packages:
+  - "apt-transport-https"
+  - "software-properties-common"
+  - "python-mysqldb"
+  - "rsync"
