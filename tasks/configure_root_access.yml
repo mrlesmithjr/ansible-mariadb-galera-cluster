@@ -7,6 +7,7 @@
     password: "{{ mariadb_mysql_root_password }}"
   become: true
   run_once: true
+  no_log: true
   with_items:
     - "{{ ansible_hostname }}"
     - "127.0.0.1"
@@ -21,6 +22,7 @@
     group: "root"
     mode: "u=rw,g=,o="
   become: true
+  no_log: true
   when: ansible_os_family == "RedHat"
 
 - name: configure_root_access | updating root passwords
@@ -30,6 +32,7 @@
     name: root
     password: "{{ mariadb_mysql_root_password }}"
   become: true
+  no_log: true
   with_items:
     - "{{ ansible_hostname }}"
     - "127.0.0.1"
@@ -44,6 +47,7 @@
     password: "{{ mariadb_mysql_root_password }}"
     priv: "*.*:ALL,GRANT"
   become: true
+  no_log: true
   with_items:
     - "%"
   when: galera_allow_root_from_any|bool
