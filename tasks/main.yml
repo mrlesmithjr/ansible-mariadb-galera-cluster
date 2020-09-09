@@ -30,6 +30,9 @@
 
 - include: setup_cluster.yml
 
+- include: mysql_databases.yml
+  when: mariadb_databases | count > 0
+
 - include: mysql_users.yml
   tags: mysql-users
   when: mariadb_mysql_users is defined
