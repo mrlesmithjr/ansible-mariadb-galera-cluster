@@ -29,12 +29,43 @@ thread_stack = {{ mariadb_mysql_settings['thread_stack'] }}
 tmpdir = /tmp
 user = mysql
 
+{% if mariadb_charset_server | default('auto') != 'auto' %}
+character-set-server  = {{ mariadb_charset_server }}
+init-connect          = 'SET NAMES {{ mariadb_charset_server }}'
+{% endif %}
+{% if mariadb_collation_server | default('auto') != 'auto' %}
+collation-server      = {{ mariadb_collation_server }}
+{% endif %}
+
+{% if mariadb_innodb_buffer_pool_size | default('auto') != "auto" %}
+innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
+{% endif %}
+{% if mariadb_innodb_buffer_pool_instances | default('auto') != "auto" %}
+innodb_buffer_pool_instances = {{ mariadb_innodb_buffer_pool_instances }}
+{% endif %}
+{% if mariadb_innodb_read_io_threads | default('auto') != "auto" %}
+innodb_read_io_threads = {{ mariadb_innodb_read_io_threads }}
+{% endif %}
+{% if mariadb_innodb_write_io_threads | default('auto') != "auto" %}
+innodb_write_io_threads = {{ mariadb_innodb_write_io_threads }}
+{% endif %}
+{% if mariadb_max_connections | default('auto') != "auto" %}
+max_connections = {{ mariadb_max_connections }}
+{% endif %}
+{% if mariadb_slow_query_log_enabled %}
+slow_query_log
+{% endif %}
+{% if mariadb_long_query_time | default('auto') != "auto" %}
+long_query_time = {{ mariadb_long_query_time }}
+{% endif %}
+
 [mysqldump]
 max_allowed_packet = 16M
 quick
 quote-names
 
 [mysql]
+default-character-set		= {{ mariadb_charset_client }}
 
 [isamchk]
 key_buffer_size = 16M

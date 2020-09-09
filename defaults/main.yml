@@ -162,3 +162,92 @@ mariadb_smtp_domain_name: "{{ mariadb_pri_domain_name }}"
 
 # Define smtp server to send email through
 mariadb_smtp_server: "smtp.{{ mariadb_pri_domain_name }}"
+
+# Character sets.
+# MariaDB's defaults: latin1
+
+# Role default: unset (server defaults)
+mariadb_charset_server: auto
+mariadb_collation_server: auto
+# Role default: utf8
+mariadb_charset_client: utf8
+
+# Recommended utf8 settings:
+# https://mariadb.com/kb/en/setting-character-sets-and-collations/#example-changing-the-default-character-set-to-utf-8
+# mariadb_charset_server: utf8mb4
+# mariadb_collation_server: utf8mb4_general_ci
+# mariadb_charset_client: utf8mb4
+
+# InnoDB tuning
+
+# Amount of memory to use for InnoDB row cache.
+# Set to a specific amount in bytes or to "auto" for server defaults.
+mariadb_innodb_buffer_pool_size: auto
+
+# How many pool instances to use for the buffer pool
+# Each instance should ideally be at least 1GB in size.
+# Set to "auto" for server defaults
+# https://mariadb.com/kb/en/innodb-buffer-pool/#innodb_buffer_pool_instances
+mariadb_innodb_buffer_pool_instances: auto
+
+# Automatic pool size tuning example:
+
+# What percentage of system memory to use for InnoDB row cache
+# 0.5 means 50%
+mariadb_innodb_mem_multiplier: 0.5
+
+# Calculate the amount of memory based on the above percentage, in bytes
+# mariadb_innodb_buffer_pool_size: >-
+#   {{ (ansible_memtotal_mb|int * mariadb_innodb_mem_multiplier * 1024 * 1024)
+#   | round | int }}
+
+# Bytes in a gigabyte. Only used internally to calculate the number of
+# pool instances in "mariadb_innodb_buffer_pool_instances"
+mariadb_one_gig_bytes: "{{ 1024 * 1024 * 1024 }}"
+
+# Calculate the amount of instances so that they are about 1G in size
+# mariadb_innodb_buffer_pool_instances: >-
+#   {% if mariadb_innodb_buffer_pool_size|int > mariadb_one_gig_bytes|int %}{{
+#   (mariadb_innodb_buffer_pool_size|int / mariadb_one_gig_bytes|int) |abs |int
+#   }}{% else %}1{% endif %}
+
+# Maximum allowed concurrent connections. MySQL default is 151
+mariadb_max_connections: auto
+
+# Queries that take more time than 'mariadb_long_query_time' to complete are
+# considered as slow. Values in seconds or 'auto' for the MySQL default (10)
+# phpmyadmin recommends this value to be set to "5" or less.
+mariadb_long_query_time: auto
+
+# Enable logging of slow queries
+mariadb_slow_query_log_enabled: false
+
+# MariaDB default: 4
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_read_io_threads
+mariadb_innodb_read_io_threads: auto
+
+# MariaDB default: 4
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_write_io_threads
+mariadb_innodb_write_io_threads: auto
+
+# Automatic I/O thread tuning for systems with more than 8 CPU cores
+
+# The calculation below only counts real CPU cores, not SMT ones which MariaDB
+# rightfully does not like.
+mariadb_real_cpus: "{{ ansible_processor_count * ansible_processor_cores }}"
+
+# mariadb_innodb_read_io_threads: >-
+#   {% if mariadb_real_cpus|int > 8
+#   %}{{ mariadb_real_cpus|int / 2 | abs | int }}{%
+#   else %}4{% endif %}
+
+# mariadb_innodb_write_io_threads: >-
+#   {% if mariadb_real_cpus|int > 8
+#   %}{{ mariadb_real_cpus|int / 2 | abs | int }}{%
+#   else %}4{% endif %}
+
+# Tune system swappiness. Default value "auto" means don't tune.
+# Recommended value based on:
+# https://mariadb.com/kb/en/mariadb-memory-allocation/#swappiness
+# mariadb_swappiness: 1
+mariadb_swappiness: auto
