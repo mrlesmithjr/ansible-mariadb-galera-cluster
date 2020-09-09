@@ -18,13 +18,12 @@
 
     - name: installing ansible pre-reqs (Debian)
       apt:
-        name: "{{ item }}"
+        name:
+          - libffi-dev
+          - libssl-dev
+          - python-dev
+          - python-setuptools
         state: present
-      with_items:
-        - libffi-dev
-        - libssl-dev
-        - python-dev
-        - python-setuptools
       when: >
             ansible_os_family == "Debian"
 
