@@ -21,9 +21,11 @@
     state: "present"
   become: true
   when: >
+    galera_enable_mariadb_repo|bool and (
     ansible_distribution == "Debian" or
     (ansible_distribution == "Ubuntu" and
     ansible_distribution_version <= '14.04')
+    )
 
 - name: debian | Adding MariaDB Repo Keys
   apt_key:
@@ -32,6 +34,7 @@
     state: "present"
   become: true
   when:
+    - galera_enable_mariadb_repo|bool
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('16.04', '>=')
 
@@ -49,7 +52,7 @@
   become: true
   when: galera_enable_mariadb_repo|bool
 
-- name: redhat | add an overrides file
+- name: debian | add an overrides file
   template:
     src: "etc/mariadb_overrides.cnf.j2"
     dest: "/etc/my.cnf.d/overrides.cnf"
@@ -62,7 +65,6 @@
       - "mariadb-server"
     state: "present"
   become: true
-  when: galera_enable_mariadb_repo|bool
 
 - name: debian | configuring root my.cnf
   template:
