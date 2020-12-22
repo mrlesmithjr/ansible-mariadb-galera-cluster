@@ -32,16 +32,16 @@ THIS_SERVER = socket.gethostname()
 
 # Server hostname or IP address
 mariadb_smtp_server = '{{ galera_notify_smtp_server }}'
-SMTP_PORT = 25
+SMTP_PORT = {{ galera_notify_smtp_port }}
 
 # Set to True if you need SMTP over SSL
 SMTP_SSL = False
 
 # Set to True if you need to authenticate to your SMTP server
-SMTP_AUTH = False
+SMTP_AUTH = {{ galera_notify_smtp_auth }}
 # Fill in authorization information here if True above
-SMTP_USERNAME = ''
-SMTP_PASSWORD = ''
+SMTP_USERNAME = '{{ galera_notify_smtp_username }}'
+SMTP_PASSWORD = '{{ galera_notify_smtp_password }}'
 
 # Takes a single sender
 MAIL_FROM = '{{ galera_notify_mail_from }}'
