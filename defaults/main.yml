@@ -60,7 +60,7 @@ mariadb_charset_server: "auto"
 mariadb_collation_server: "auto"
 # Role default: utf8
 mariadb_charset_client: "utf8"
-  
+
 # If this is defined it will create a file with overrides
 # mariadb_config_overrides:
 #   mariadb:
