@@ -1,0 +1,13 @@
+---
+mariadb_login_unix_socket: "/var/lib/mysql/mysql.sock"
+mariadb_pre_req_packages:
+  - "MySQL-python"
+mariadb_packages:
+  - "MariaDB-server"
+  - "galera"
+mariadb_systemd_service_name: "mysql"
+mariadb_confs:
+  - "etc/my.cnf.d/server.cnf"
+mariadb_temp_confs:
+  - "etc/my.cnf.d/server.cnf"
+galera_wsrep_provider: "/usr/lib64/galera/libgalera_smm.so"

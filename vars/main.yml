@@ -1,2 +1,18 @@
 ---
 # vars file for ansible-mariadb-galera-cluster
+
+galera_cluster_nodes: "\
+  {% set _galera_cluster_nodes = [] %}\
+  {% for host in groups[ galera_cluster_nodes_group ] %}\
+  {{   _galera_cluster_nodes.append( host ) }}\
+  {% endfor %}\
+  {{ _galera_cluster_nodes }}"
+
+galera_wsrep_cluster_address: "\
+  {% set _galera_cluster_node_addresses = [] %}\
+  {% for node in galera_cluster_nodes %}\
+  {{   _galera_cluster_node_addresses.append( hostvars[node]['galera_cluster_bind_address'] ) }}\
+  {% endfor %}\
+  {% set _galera_wsrep_cluster_address = 'gcomm://' ~ _galera_cluster_node_addresses | map('ipwrap') | list | join(',') %}\
+  {{ _galera_wsrep_cluster_address }}"
+  

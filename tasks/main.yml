@@ -2,72 +2,69 @@
 # tasks file for ansible-mariadb-galera-cluster
 - name: gather os specific variables
   include_vars: "{{ item }}"
+  tags:
+    - install 
+    - config
   with_first_found:
-    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
 
-- name: Ensure NIC specified in 'galera_cluster_bind_interface' exists
+- name: ensure NIC specified in 'galera_cluster_bind_interface' exists
   assert:
-    that:
-      - galera_cluster_bind_interface in ansible_interfaces
+    that: galera_cluster_bind_interface in ansible_interfaces
     fail_msg: >-
-      The NIC name '{{ galera_cluster_bind_interface }}' specified in
-      'galera_cluster_bind_interface' does not exist on the target host.
-      Available interfaces are: {{ ansible_interfaces | join(',') }}.
+      The NIC name "{{ galera_cluster_bind_interface }}" specified in
+      "galera_cluster_bind_interface" does not exist on the target host.
+      Available interfaces are: "{{ ansible_interfaces | join(',') }}".
+  tags:
+    - install 
+    - config
 
-- include: unconfigure_cluster.yml
-  when: >
-    galera_reconfigure_galera is defined and
-    galera_reconfigure_galera
-
-- include: debian.yml
+- import_tasks: debian.yml
+  tags: 
+    - install
   when: ansible_os_family == "Debian"
 
-- include: redhat.yml
+- import_tasks: redhat.yml
+  tags: 
+    - install
   when: ansible_os_family == "RedHat"
 
-- include: max-open-files.yml
-  when: >
-    ansible_service_mgr == "systemd" and
-    mariadb_max_open_files != 0
+- import_tasks: system_performance_tuning.yml
+  tags: 
+    - config
 
-- include: oom-score-adjust.yml
-  when: >
-    ansible_service_mgr == "systemd" and
-    mariadb_oom_score_adjust != 0
+- name: flush handlers before continuing
+  meta: flush_handlers
+  tags:
+    - install 
+    - config
 
-# Borrowed from percona xtradb cluster ansible role:
-# https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/bootstrap.yml
-# Many thanks to Cedric DELGEHIER
-- name: Configure swappiness
-  sysctl:
-    name: vm.swappiness
-    value: "{{ mariadb_swappiness }}"
-    state: present
-  become: true
-  when:
-    - mariadb_swappiness != 'auto'
-    - "not (
-      (ansible_virtualization_role == 'guest')
-      and (ansible_virtualization_type == 'lxc')
-      )"
+- import_tasks: setup_cluster.yml
+  tags: 
+    - config
 
-- include: setup_cluster.yml
+- import_tasks: configure_root_access.yml
+  tags: 
+    - config
 
-- include: mysql_databases.yml
+- import_tasks: mysql_databases.yml
+  tags: 
+    - mysql_databases
   when: mariadb_databases | count > 0
 
-- include: mysql_users.yml
-  tags: mysql-users
+- import_tasks: mysql_users.yml
+  tags: 
+    - mysql_users
   when: mariadb_mysql_users is defined
 
-- include: galera_monitoring.yml
+- import_tasks: galera_monitoring.yml
   tags:
     - config_galera_monitoring
   when: galera_enable_galera_monitoring_script
 
-- include: configure_root_access.yml
-
-- include: cacti.yml
+- import_tasks: cacti.yml
+  tags:
+    - config_cacti_monitoring
   when: galera_enable_cacti_monitoring

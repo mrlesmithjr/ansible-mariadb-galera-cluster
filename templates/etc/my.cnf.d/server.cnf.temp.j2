@@ -49,9 +49,9 @@ long_query_time = {{ mariadb_long_query_time }}
 wsrep_on=ON
 wsrep_provider={{ galera_wsrep_provider }}
 wsrep_cluster_name="{{ galera_cluster_name }}"
-wsrep_cluster_address="{{ galera_wsrep_cluster_address }}"
+#wsrep_cluster_address="{{ galera_wsrep_cluster_address }}"
 # To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
-#wsrep_cluster_address="gcomm://"
+wsrep_cluster_address="gcomm://"
 
 binlog_format=row
 default_storage_engine=InnoDB

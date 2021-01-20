@@ -1,6 +1,4 @@
 ---
-- include: mysql_root_pw.yml
-
 - name: debian | update package list
   apt:
     update_cache: yes
@@ -40,7 +38,7 @@
 
 - name: debian | Pinning MariaDB Repo
   template:
-    src: "mariadb_repo.j2"
+    src: "etc/apt/preferences.d/mariadb.j2"
     dest: "/etc/apt/preferences.d/mariadb"
   become: true
   when: galera_enable_mariadb_repo|bool
@@ -59,13 +57,6 @@
   become: true
   when: mariadb_config_overrides is defined
 
-- name: debian | installing mariadb-galera packages
-  apt:
-    name:
-      - "mariadb-server"
-    state: "present"
-  become: true
-
 - name: debian | configuring root my.cnf
   template:
     src: "root/my.cnf.j2"
@@ -76,12 +67,34 @@
   no_log: true
   become: true
 
+- name: debian | mysql root password setting
+  debconf:
+    name: "mariadb-server-{{ mariadb_version }}"
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "password"
+  become: true
+  changed_when: false
+  no_log: true
+  with_items:
+    - question: "mysql-server/root_password"
+      value: "{{ mariadb_mysql_root_password }}"
+    - question: "mysql-server/root_password_again"
+      value: "{{ mariadb_mysql_root_password }}"
+  when: ansible_os_family == "Debian"
+
+- name: debian | installing mariadb-galera packages
+  apt:
+    name: "{{ mariadb_packages }}"
+    state: "present"
+  become: true
+
 - name: debian | adding debian-sys-maintenance permissions to mysql
   mysql_user:
     name: "debian-sys-maint"
     priv: "*.*:ALL,GRANT"
     state: "present"
-    password: "{{ galera_deb_db_password }}"
+    password: "{{ mariadb_mysql_root_password }}"
     login_unix_socket: "{{ mariadb_login_unix_socket }}"
   no_log: true
   become: true

@@ -2,7 +2,7 @@
 # Borrowed from percona xtradb cluster ansible role:
 # https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/postinstall.yml
 # Many thanks to Cedric DELGEHIER
-- name: Create the databases
+- name: mysql_databases | create the databases
   mysql_db:
     name: "{{ item.name }}"
     state: present
@@ -11,7 +11,7 @@
   become: true
   register: _db
 
-- name: Copy database init scripts
+- name: mysql_databases | copy database init scripts
   copy:
     src: "{{ item.item.init_script }}"
     dest: "/tmp/{{ item.item.init_script | basename }}"
@@ -21,7 +21,7 @@
     - item.changed
     - item.item.init_script is defined
 
-- name: Initialise databases
+- name: mysql_databases | initialise databases
   mysql_db:
     name: "{{ item.item.name }}"
     state: import
@@ -33,7 +33,7 @@
     - item.changed
     - item.item.init_script is defined
 
-- name: Delete init scripts from the server
+- name: mysql_databases | delete init scripts from the server
   file:
     name: "/tmp/{{ item.item.init_script | basename }}"
     state: absent

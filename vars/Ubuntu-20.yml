@@ -1,9 +1,0 @@
----
-mariadb_login_unix_socket: /var/run/mysqld/mysqld.sock
-mariadb_pre_req_packages:
-  - "apt-transport-https"
-  - "software-properties-common"
-  - "python3-pymysql"
-  - "rsync"
-# Version of the mainline MariaDB package in Ubuntu 20.04
-mariadb_version: "10.3"

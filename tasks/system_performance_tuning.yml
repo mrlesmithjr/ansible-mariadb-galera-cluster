@@ -1,0 +1,27 @@
+---
+- include: max-open-files.yml
+  when: >
+    ansible_service_mgr == "systemd" and
+    mariadb_max_open_files != 0
+
+- include: oom-score-adjust.yml
+  when: >
+    ansible_service_mgr == "systemd" and
+    mariadb_oom_score_adjust != 0
+
+# Borrowed from percona xtradb cluster ansible role:
+# https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/bootstrap.yml
+# Many thanks to Cedric DELGEHIER
+- name: system_perfromance_tuning | configure swappiness
+  sysctl:
+    name: "vm.swappiness"
+    value: "{{ mariadb_swappiness }}"
+    state: "present"
+  become: true
+  when:
+    - mariadb_swappiness != 'auto'
+    - "not (
+      (ansible_virtualization_role == 'guest')
+      and (ansible_virtualization_type == 'lxc')
+      )"
+
