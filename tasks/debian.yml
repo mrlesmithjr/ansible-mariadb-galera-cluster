@@ -12,34 +12,19 @@
   become: true
   loop:
 
-- name: debian | Adding MariaDB Repo Keys
+- name: debian | adding MariaDB Repo Keys
   apt_key:
     keyserver: "{{ mariadb_debian_repo_keyserver }}"
-    id: "0xcbcb082a1bb943db"
+    id: "{{ mariadb_debian_repo_key }}"
     state: "present"
   become: true
-  when: >
-    galera_enable_mariadb_repo|bool and (
-    ansible_distribution == "Debian" or
-    (ansible_distribution == "Ubuntu" and
-    ansible_distribution_version <= '14.04')
-    )
+  when: galera_enable_mariadb_repo|bool
 
-- name: debian | Adding MariaDB Repo Keys
-  apt_key:
-    keyserver: "{{ mariadb_debian_repo_keyserver }}"
-    id: "0xF1656F24C74CD1D8"
-    state: "present"
-  become: true
-  when:
-    - galera_enable_mariadb_repo|bool
-    - ansible_distribution == "Ubuntu"
-    - ansible_distribution_version is version('16.04', '>=')
-
-- name: debian | Pinning MariaDB Repo
+- name: debian | pinning MariaDB Repo
   template:
     src: "etc/apt/preferences.d/mariadb.j2"
     dest: "/etc/apt/preferences.d/mariadb"
+    mode: '0644'
   become: true
   when: galera_enable_mariadb_repo|bool
 
@@ -54,6 +39,7 @@
   template:
     src: "etc/mariadb_overrides.cnf.j2"
     dest: "/etc/my.cnf.d/overrides.cnf"
+    mode: '0644'
   become: true
   when: mariadb_config_overrides is defined
 
@@ -81,20 +67,9 @@
       value: "{{ mariadb_mysql_root_password }}"
     - question: "mysql-server/root_password_again"
       value: "{{ mariadb_mysql_root_password }}"
-  when: ansible_os_family == "Debian"
 
 - name: debian | installing mariadb-galera packages
   apt:
     name: "{{ mariadb_packages }}"
     state: "present"
-  become: true
-
-- name: debian | adding debian-sys-maintenance permissions to mysql
-  mysql_user:
-    name: "debian-sys-maint"
-    priv: "*.*:ALL,GRANT"
-    state: "present"
-    password: "{{ mariadb_mysql_root_password }}"
-    login_unix_socket: "{{ mariadb_login_unix_socket }}"
-  no_log: true
   become: true

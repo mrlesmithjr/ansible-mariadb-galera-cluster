@@ -1,12 +1,32 @@
 ---
 - name: redhat | adding mariadb repo
-  template:
-    src: "etc/yum.repos.d/MariaDB.repo.j2"
-    dest: "/etc/yum.repos.d/MariaDB.repo"
-    owner: "root"
-    group: "root"
+  yum_repository:
+    name: "mariadb"
+    file: "MariaDB"
+    description: "MariaDB"
+    baseurl: "{{ mariadb_redhat_repo }}"
+    gpgkey: "{{ mariadb_redhat_repo_key }}" 
+    gpgcheck: true
   become: true
-  register: repo_added
+  register: "repo_added"
+
+# fix for conflicting package from appstream
+- name: redhat | disable appstream mysql/mariadb modules
+  command:
+    cmd: "dnf -y module disable mysql mariadb"
+    warn: false
+  changed_when: false
+  become: true
+  when: ansible_distribution_major_version is version('8', '>=')
+
+- name: redhat | clean dnf metadata (centos8 & fedora)
+  shell: "dnf clean all && rm -r /var/cache/dnf" # noqa 503
+  become: true
+  args:
+    warn: false
+  when:
+    - repo_added.changed
+    - ansible_distribution_major_version is version('8', '>=')
 
 - name: redhat | installing pre-reqs
   yum:
@@ -35,20 +55,11 @@
   become: true
   when: mariadb_config_overrides is defined
 
-# fix for conflicting package from appstream
-- name: redhat | disable appstream mysql/mariadb modules
-  command: 
-    cmd: "dnf -y module disable mysql mariadb"
-    warn: false
-  changed_when: false
-  become: true
-  when: ansible_distribution_major_version >= "8"
-
 - name: redhat | installing mariadb mysql
   yum:
     name: "{{ mariadb_packages }}"
     state: "present"
-    update_cache: yes
+    update_cache: true
   become: true
 
 - name: redhat | remove migrated-from-my.cnf-settings.conf that is causing MariaDB to not start

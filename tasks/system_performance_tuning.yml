@@ -24,4 +24,3 @@
       (ansible_virtualization_role == 'guest')
       and (ansible_virtualization_type == 'lxc')
       )"
-

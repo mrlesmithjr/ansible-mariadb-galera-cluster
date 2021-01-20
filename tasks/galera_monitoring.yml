@@ -10,7 +10,7 @@
   register: galera_monitoring_updated
 
 - name: galera_monitoring | restarting mysql on first node
-  service:
+  service: # noqa 503
     name: "{{ mariadb_systemd_service_name }}"
     state: "restarted"
   become: true
@@ -19,7 +19,7 @@
     galera_monitoring_updated.changed
 
 - name: galera_monitoring | waiting for mysql to start on first node
-  service:
+  service: # noqa 503
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true
@@ -34,7 +34,7 @@
     galera_monitoring_updated.changed
 
 - name: galera_monitoring | restarting mysql on additional servers
-  service:
+  service: # noqa 503
     name: "{{ mariadb_systemd_service_name }}"
     state: "restarted"
   become: true
@@ -44,7 +44,7 @@
     galera_monitoring_updated.changed
 
 - name: galera_monitoring | waiting for mysql to start on other nodes
-  service:
+  service: # noqa 503
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true
@@ -55,4 +55,3 @@
   when: >
     inventory_hostname != galera_mysql_first_node and
     galera_monitoring_updated.changed
-

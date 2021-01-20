@@ -3,7 +3,7 @@
 - name: gather os specific variables
   include_vars: "{{ item }}"
   tags:
-    - install 
+    - install
     - config
   with_first_found:
     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
@@ -18,44 +18,44 @@
       "galera_cluster_bind_interface" does not exist on the target host.
       Available interfaces are: "{{ ansible_interfaces | join(',') }}".
   tags:
-    - install 
+    - install
     - config
 
 - import_tasks: debian.yml
-  tags: 
+  tags:
     - install
   when: ansible_os_family == "Debian"
 
 - import_tasks: redhat.yml
-  tags: 
+  tags:
     - install
   when: ansible_os_family == "RedHat"
 
 - import_tasks: system_performance_tuning.yml
-  tags: 
+  tags:
     - config
 
 - name: flush handlers before continuing
   meta: flush_handlers
   tags:
-    - install 
+    - install
     - config
 
 - import_tasks: setup_cluster.yml
-  tags: 
+  tags:
     - config
 
 - import_tasks: configure_root_access.yml
-  tags: 
+  tags:
     - config
 
 - import_tasks: mysql_databases.yml
-  tags: 
+  tags:
     - mysql_databases
   when: mariadb_databases | count > 0
 
 - import_tasks: mysql_users.yml
-  tags: 
+  tags:
     - mysql_users
   when: mariadb_mysql_users is defined
 
