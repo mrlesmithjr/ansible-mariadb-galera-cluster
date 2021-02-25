@@ -1,45 +1,96 @@
 ---
 # defaults file for ansible-mariadb-galera-cluster
 
-# Define the cacti user info for cacti db monitoring - If used. May remove later.
-cacti_db_password: "cactiuser"
-cacti_db_user: "cactiuser"
+# MariaDB setting
 
-# Defines if root logins should be allowed from any host
-galera_allow_root_from_any: false
+# Define mariadb version
+mariadb_version: "10.5"
 
-# Define bind address for galera cluster
-galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
+# Defines if we should enable the MariaDB repo or use version within OS repos.
+galera_enable_mariadb_repo: true
+
+# Defines repository settings for apt
+mariadb_debian_repo: "deb [arch=amd64,i386,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/{{ mariadb_version }}/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} main"
+mariadb_debian_repo_keyserver: "keyserver.ubuntu.com"
+mariadb_debian_repo_pin: "nyc2.mirrors.digitalocean.com"
+
+# Defines repository settings for rpm
+mariadb_redhat_repo: "https://yum.mariadb.org/{{ mariadb_version }}/{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}-amd64"
+mariadb_redhat_repo_key: "https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"
 
 # bind address for MariaDB's 3306 port.
 # By default takes the value of the galera cluster IP, but can be overriden
 # to 0.0.0.0 (for example) to allow MySQL connections to localhost
 mariadb_bind_address: "{{ galera_cluster_bind_address }}"
 
+# Defines if root logins should be allowed from any host
+galera_allow_root_from_any: false
+
+# Define listen port
+mariadb_mysql_port: 3306
+
+# Define mysql root password
+# generate using echo password | mkpasswd -s -m sha-512
+mariadb_mysql_root_password: "root"
+
+# Define mysql mem multiplier (used to calculate key_buffer_size)
+mariadb_mysql_mem_multiplier: .25
+
+mariadb_mysql_settings:
+  datadir: "/var/lib/mysql"
+  expire_logs_days: 10
+  #Default is 16M
+  key_buffer_size: "{{ (ansible_memtotal_mb | int * mariadb_mysql_mem_multiplier) | round | int }}M"
+  max_allowed_packet: "16M"
+  max_binlog_size: "100M"
+  query_cache_limit: "1M"
+  query_cache_size: "16M"
+  # MariaDB default: https://mariadb.com/kb/en/server-system-variables/#thread_cache_size
+  thread_cache_size: 256
+  thread_stack: "192K"
+
+# Recommended utf8 settings:
+# https://mariadb.com/kb/en/setting-character-sets-and-collations/#example-changing-the-default-character-set-to-utf-8
+# mariadb_charset_server: utf8mb4
+# mariadb_collation_server: utf8mb4_general_ci
+# mariadb_charset_client: utf8mb4
+
+# Role default: unset (server defaults: latin1)
+mariadb_charset_server: "auto"
+mariadb_collation_server: "auto"
+# Role default: utf8
+mariadb_charset_client: "utf8"
+  
+# If this is defined it will create a file with overrides
+# mariadb_config_overrides:
+#   mariadb:
+#     max_connections: 2048
+
+# Galera settings
+
+# Defines if the galera cluster should be reconfigured
+# it will initiate cluster shutdown and bootstrap
+# common mariadb setting doesn't require this option
+galera_reconfigure_galera: false
+
 # Define interface in which to bind
 # ex. eth0|eth1|enp0s3|enp0s8
-galera_cluster_bind_interface: "enp0s8"
+galera_cluster_bind_interface: "eth0"
+
+# Define bind address for galera cluster
+galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
+
+# Defines wsrep node address
+galera_wsrep_node_address: "{{ galera_cluster_bind_address }}:{{ galera_wsrep_node_address_port }}"
+
+# Defines wsrep node port
+galera_wsrep_node_address_port: 4567
 
 # Define the name of the cluster
 galera_cluster_name: "vagrant-test"
 
 # Define Ansible group in which the nodes exist to be part of the cluster
 galera_cluster_nodes_group: "galera-cluster-nodes"
-
-# Defines debian db password
-# generate using echo password | mkpasswd -s -m sha-512
-galera_deb_db_password: "{{ mariadb_mysql_root_password }}"
-
-# Defines email address to receive notifications
-galera_email_notifications: "notifications@{{ mariadb_smtp_domain_name }}"
-
-# Defines if cacti monitoring should be enabled for mysql - If used. May remove later.
-galera_enable_cacti_monitoring: false
-
-galera_enable_galera_monitoring_script: false
-
-# Defines if we should enable the MariaDB repo or use version within OS repos.
-galera_enable_mariadb_repo: true
 
 # https://mariadb.com/kb/en/mariadb/wsrep_provider_options/
 galera_extra_wsrep_provider_options:
@@ -66,39 +117,13 @@ galera_ist_recv_addr_port: "{{ galera_wsrep_node_address_port|int + 1 }}"
 # NAT or in similar cases where the public and private addresses differ.
 galera_ist_recv_bind: "{{ galera_cluster_bind_address }}"
 
-galera_monitor_script_name: "galeranotify.py"
-galera_monitor_script_path: "/etc/mysql"
+# MariaDB system tunning
 
-# Defines the which node should be considered the master in the cluster
-# Used to bootstrap cluster
-galera_mysql_master_node: "{{ groups[galera_cluster_nodes_group][0] }}"
-
-# Define email address that cluster notifications will be sent from
-galera_notify_mail_from: "galeranotify@{{ mariadb_smtp_domain_name }}"
-
-# Define email address that cluster notification will be sent to
-galera_notify_mail_to: "{{ galera_email_notifications }}"
-
-# Define smtp server to send notifications through
-galera_notify_smtp_server: "{{ mariadb_smtp_server }}"
-
-# Defines if the cluster should be reconfigured
-galera_reconfigure_galera: false
-
-galera_wsrep_node_address: "{{ galera_cluster_bind_address }}:{{ galera_wsrep_node_address_port }}"
-
-galera_wsrep_node_address_port: 4567
-
-# MariaDB Repo Info
-mariadb_debian_repo: "deb [arch=amd64,i386,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/{{ mariadb_version }}/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} main"
-mariadb_debian_repo_key: "0xF1656F24C74CD1D8"
-mariadb_debian_repo_keyserver: "keyserver.ubuntu.com"
-mariadb_debian_repo_pin: nyc2.mirrors.digitalocean.com
-mariadb_redhat_repo: "http://yum.mariadb.org/{{ mariadb_version }}/{{ ansible_distribution|lower }}{{ ansible_distribution_major_version|int }}-amd64"
-mariadb_redhat_repo_key: "https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"
-mariadb_version: "10.1"
-
-mariadb_mysql_mem_multiplier: .25
+# Tune system swappiness. Default value "auto" means don't tune.
+# Recommended value based on:
+# https://mariadb.com/kb/en/mariadb-memory-allocation/#swappiness
+# mariadb_swappiness: 1
+mariadb_swappiness: "auto"
 
 # Add the posibility to adjust the OOM score (only works for SystemD)
 mariadb_oom_score_adjust: 0
@@ -108,88 +133,17 @@ mariadb_oom_score_adjust: 0
 # notice for SystemD: 0 does not mean 'unlimited', use 'infinity' for unlimited
 mariadb_max_open_files: 0
 
-# Define listen port
-mariadb_mysql_port: 3306
-
-# Define mysql root password
-# generate using echo password | mkpasswd -s -m sha-512
-mariadb_mysql_root_password: "root"
-
-mariadb_mysql_settings:
-  datadir: /var/lib/mysql
-  expire_logs_days: 10
-  #Default is 16M
-  key_buffer_size: "{{ (ansible_memtotal_mb | int * mariadb_mysql_mem_multiplier) | round | int }}M"
-  max_allowed_packet: 16M
-  max_binlog_size: 100M
-  query_cache_limit: 1M
-  query_cache_size: 16M
-  # MariaDB default: https://mariadb.com/kb/en/server-system-variables/#thread_cache_size
-  thread_cache_size: 256
-  thread_stack: 192K
-
-# If this is defined it will create a file with overrides
-# mariadb_config_overrides:
-#   mariadb:
-#     max_connections: 2048
-
-# Create these MariaDB databases during installation
-# Example:
-# mariadb_databases:
-#   - name: keystone
-#   - name: mydb
-#     init_script: files/init_mydb.sql
-mariadb_databases: []
-
-# Define additional MySQL users
-mariadb_mysql_users: []
-#   - name: example
-#     hosts:
-#       - "%"
-#       - "127.0.0.1"
-#       - "::1"
-#       - "localhost"
-#     password: secret
-#     encrypted: no (default)
-#     priv: *.*:USAGE (default}
-#     state: present (default)
-#     append_privs: no (default)
-
-# Define the primary domain name of your environment
-mariadb_pri_domain_name: "example.org"
-
-# Define smtp domain for email
-mariadb_smtp_domain_name: "{{ mariadb_pri_domain_name }}"
-
-# Define smtp server to send email through
-mariadb_smtp_server: "smtp.{{ mariadb_pri_domain_name }}"
-
-# Character sets.
-# MariaDB's defaults: latin1
-
-# Role default: unset (server defaults)
-mariadb_charset_server: auto
-mariadb_collation_server: auto
-# Role default: utf8
-mariadb_charset_client: utf8
-
-# Recommended utf8 settings:
-# https://mariadb.com/kb/en/setting-character-sets-and-collations/#example-changing-the-default-character-set-to-utf-8
-# mariadb_charset_server: utf8mb4
-# mariadb_collation_server: utf8mb4_general_ci
-# mariadb_charset_client: utf8mb4
-
 # InnoDB tuning
 
 # Amount of memory to use for InnoDB row cache.
 # Set to a specific amount in bytes or to "auto" for server defaults.
-mariadb_innodb_buffer_pool_size: auto
+mariadb_innodb_buffer_pool_size: "auto"
 
 # How many pool instances to use for the buffer pool
 # Each instance should ideally be at least 1GB in size.
 # Set to "auto" for server defaults
 # https://mariadb.com/kb/en/innodb-buffer-pool/#innodb_buffer_pool_instances
-mariadb_innodb_buffer_pool_instances: auto
+mariadb_innodb_buffer_pool_instances: "auto"
 
 # Automatic pool size tuning example:
 
@@ -213,23 +167,23 @@ mariadb_one_gig_bytes: "{{ 1024 * 1024 * 1024 }}"
 #   }}{% else %}1{% endif %}
 
 # Maximum allowed concurrent connections. MySQL default is 151
-mariadb_max_connections: auto
+mariadb_max_connections: "auto"
 
 # Queries that take more time than 'mariadb_long_query_time' to complete are
 # considered as slow. Values in seconds or 'auto' for the MySQL default (10)
 # phpmyadmin recommends this value to be set to "5" or less.
-mariadb_long_query_time: auto
+mariadb_long_query_time: "auto"
 
 # Enable logging of slow queries
 mariadb_slow_query_log_enabled: false
 
 # MariaDB default: 4
 # https://mariadb.com/kb/en/innodb-system-variables/#innodb_read_io_threads
-mariadb_innodb_read_io_threads: auto
+mariadb_innodb_read_io_threads: "auto"
 
 # MariaDB default: 4
 # https://mariadb.com/kb/en/innodb-system-variables/#innodb_write_io_threads
-mariadb_innodb_write_io_threads: auto
+mariadb_innodb_write_io_threads: "auto"
 
 # Automatic I/O thread tuning for systems with more than 8 CPU cores
 
@@ -247,8 +201,67 @@ mariadb_real_cpus: "{{ ansible_processor_count * ansible_processor_cores }}"
 #   %}{{ mariadb_real_cpus|int / 2 | abs | int }}{%
 #   else %}4{% endif %}
 
-# Tune system swappiness. Default value "auto" means don't tune.
-# Recommended value based on:
-# https://mariadb.com/kb/en/mariadb-memory-allocation/#swappiness
-# mariadb_swappiness: 1
-mariadb_swappiness: auto
+# Define databases & users to be created
+
+# Create these MariaDB databases during installation
+# Example:
+# mariadb_databases:
+#   - name: keystone
+#   - name: mydb
+#     init_script: files/init_mydb.sql
+mariadb_databases: []
+
+# Define additional MySQL users
+mariadb_mysql_users: []
+#   - name: example
+#     hosts:
+#       - "%"
+#       - "127.0.0.1"
+#       - "::1"
+#       - "localhost"
+#     password: secret
+#     encrypted: no (default)
+#     priv: *.*:USAGE (default}
+#     state: present (default)
+#     append_privs: no (default)
+
+# Monitoring settings
+
+# Defines if glaera monitoring script should be installes
+galera_enable_galera_monitoring_script: false
+
+# Define galera monitoring script path & name
+galera_monitor_script_name: "galeranotify.py"
+galera_monitor_script_path: "/etc/mysql"
+
+# Defines the which node should be considered the first in the cluster
+# Used to bootstrap cluster
+galera_mysql_first_node: "{{ groups[galera_cluster_nodes_group][0] }}"
+
+# Define the primary domain name of your environment
+mariadb_pri_domain_name: "example.org"
+
+# Define smtp domain for email
+mariadb_smtp_domain_name: "{{ mariadb_pri_domain_name }}"
+
+# Define smtp server to send email through
+mariadb_smtp_server: "smtp.{{ mariadb_pri_domain_name }}"
+
+# Defines email address to receive notifications
+galera_email_notifications: "notifications@{{ mariadb_smtp_domain_name }}"
+
+# Define email address that cluster notifications will be sent from
+galera_notify_mail_from: "galeranotify@{{ mariadb_smtp_domain_name }}"
+
+# Define email address that cluster notification will be sent to
+galera_notify_mail_to: "{{ galera_email_notifications }}"
+
+# Define smtp server to send notifications through
+galera_notify_smtp_server: "{{ mariadb_smtp_server }}"
+
+# Defines if cacti monitoring should be enabled for mysql - If used. May remove later.
+galera_enable_cacti_monitoring: false
+
+# Define the cacti user info for cacti db monitoring - If used. May remove later.
+cacti_db_password: "cactiuser"
+cacti_db_user: "cactiuser"

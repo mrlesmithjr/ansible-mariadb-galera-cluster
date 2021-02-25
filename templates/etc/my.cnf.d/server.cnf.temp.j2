@@ -1,0 +1,88 @@
+#
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+# this is read by the standalone daemon and embedded servers
+[server]
+
+# this is only for the mysqld standalone daemon
+[mysqld]
+
+{% if mariadb_charset_server | default('auto') != 'auto' %}
+character-set-server  = {{ mariadb_charset_server }}
+init-connect          = 'SET NAMES {{ mariadb_charset_server }}'
+{% endif %}
+{% if mariadb_collation_server | default('auto') != 'auto' %}
+collation-server      = {{ mariadb_collation_server }}
+{% endif %}
+
+{% if mariadb_innodb_buffer_pool_size | default('auto') != "auto" %}
+innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
+{% endif %}
+{% if mariadb_innodb_buffer_pool_instances | default('auto') != "auto" %}
+innodb_buffer_pool_instances = {{ mariadb_innodb_buffer_pool_instances }}
+{% endif %}
+{% if mariadb_innodb_read_io_threads | default('auto') != "auto" %}
+innodb_read_io_threads = {{ mariadb_innodb_read_io_threads }}
+{% endif %}
+{% if mariadb_innodb_write_io_threads | default('auto') != "auto" %}
+innodb_write_io_threads = {{ mariadb_innodb_write_io_threads }}
+{% endif %}
+{% if mariadb_max_connections | default('auto') != "auto" %}
+max_connections = {{ mariadb_max_connections }}
+{% endif %}
+{% if mariadb_slow_query_log_enabled %}
+slow_query_log
+{% endif %}
+{% if mariadb_long_query_time | default('auto') != "auto" %}
+long_query_time = {{ mariadb_long_query_time }}
+{% endif %}
+
+#
+# * Galera-related settings
+#
+[galera]
+# Mandatory settings
+wsrep_on=ON
+wsrep_provider={{ galera_wsrep_provider }}
+wsrep_cluster_name="{{ galera_cluster_name }}"
+{% set _galera_cluster_node_addresses = [] %}
+{% for node in galera_cluster_nodes %}
+{%   set _ = _galera_cluster_node_addresses.append( hostvars[node]['galera_cluster_bind_address'] | default(hostvars[node]['ansible_' ~ galera_cluster_bind_interface]['ipv4']['address']) | mandatory ) %}
+{% endfor %}
+#wsrep_cluster_address="{{ 'gcomm://' ~ _galera_cluster_node_addresses | map('ipwrap') | list | join(',') }}"
+# To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
+wsrep_cluster_address="gcomm://"
+
+binlog_format=row
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+#
+# Allow server to accept connections on all interfaces.
+#
+bind-address={{ mariadb_bind_address }}
+#
+# Optional setting
+#wsrep_slave_threads=1
+#innodb_flush_log_at_trx_commit=0
+
+wsrep_sst_method=rsync
+{% if galera_enable_galera_monitoring_script %}
+wsrep_notify_cmd='{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}'
+{% endif %}
+
+# this is only for embedded server
+[embedded]
+
+# This group is only read by MariaDB servers, not by MySQL.
+# If you use the same .cnf file for MySQL and MariaDB,
+# you can put MariaDB-only options here
+[mariadb]
+
+# This group is only read by MariaDB-10.1 servers.
+# If you use the same .cnf file for MariaDB of different versions,
+# use this group for options that older servers don't understand
+[mariadb-10.1]

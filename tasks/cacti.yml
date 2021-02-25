@@ -1,5 +1,5 @@
 ---
-- name: debian | adding cacti db user for monitoring
+- name: cacti_monitoring | adding cacti db user for monitoring
   mysql_user:
     host: "{{ cacti_server }}"
     login_unix_socket: "{{ mariadb_login_unix_socket }}"
@@ -14,7 +14,7 @@
   when: >
     cacti_server is defined
 
-- name: debian | adding cacti db user for monitoring
+- name: cacti_monitoring | adding cacti db user for monitoring
   mysql_user:
     host: "{{ cacti_server_fqdn }}"
     login_unix_socket: "{{ mariadb_login_unix_socket }}"

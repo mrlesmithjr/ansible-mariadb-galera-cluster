@@ -1,0 +1,19 @@
+---
+mariadb_login_unix_socket: "/var/run/mysqld/mysqld.sock"
+mariadb_pre_req_packages:
+  - "apt-transport-https"
+  - "software-properties-common"
+  - "python3-pymysql"
+  - "rsync"
+  - "gnupg"
+mariadb_debian_repo_key: "0xF1656F24C74CD1D8"
+mariadb_packages:
+  - "mariadb-server"
+mariadb_systemd_service_name: "mysql"
+mariadb_confs:
+  - "etc/mysql/debian.cnf"
+  - "etc/mysql/my.cnf"
+  - "etc/mysql/conf.d/galera.cnf"
+mariadb_temp_confs:
+  - "etc/mysql/conf.d/galera.cnf"
+galera_wsrep_provider: "/usr/lib/galera/libgalera_smm.so"

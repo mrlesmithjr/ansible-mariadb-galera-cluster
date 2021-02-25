@@ -1,32 +1,46 @@
 ---
-- include: mysql_root_pw.yml
-
 - name: redhat | adding mariadb repo
-  template:
-    src: "etc/yum.repos.d/MariaDB.repo.j2"
-    dest: "/etc/yum.repos.d/MariaDB.repo"
-    owner: "root"
-    group: "root"
+  yum_repository:
+    name: "mariadb"
+    file: "MariaDB"
+    description: "MariaDB"
+    baseurl: "{{ mariadb_redhat_repo }}"
+    gpgkey: "{{ mariadb_redhat_repo_key }}" 
+    gpgcheck: true
   become: true
-  register: repo_added
+  register: "repo_added"
+
+# fix for conflicting package from appstream
+- name: redhat | disable appstream mysql/mariadb modules
+  command:
+    cmd: "dnf -y module disable mysql mariadb"
+    warn: false
+  changed_when: false
+  become: true
+  when: ansible_distribution_major_version is version('8', '>=')
+
+- name: redhat | clean dnf metadata (centos8 & fedora)
+  shell: "dnf clean all && rm -r /var/cache/dnf" # noqa 503
+  become: true
+  args:
+    warn: false
+  when:
+    - repo_added.changed
+    - ansible_distribution_major_version is version('8', '>=')
 
 - name: redhat | installing pre-reqs
   yum:
-    name:
-      - "MySQL-python"
-      - "socat"
+    name: "{{ mariadb_pre_req_packages }}"
     state: "present"
-    update_cache: yes
+    update_cache: true
   become: true
-  when: >
-    ansible_distribution != "Fedora"
 
-- name: Precreate /etc/my.cnf.d in case we need to add mariadb_config_overrides file
+- name: redhat | precreate /etc/my.cnf.d in case we need to add mariadb_config_overrides file
   file:
-    path: /etc/my.cnf.d
-    state: directory
+    path: "/etc/my.cnf.d"
+    state: "directory"
     mode: 0755
-    recurse: yes
+    recurse: true
   become: true
   changed_when: false
   when: mariadb_config_overrides is defined
@@ -43,39 +57,20 @@
 
 - name: redhat | installing mariadb mysql
   yum:
-    name:
-      - "MariaDB-server"
-      - "galera"
+    name: "{{ mariadb_packages }}"
     state: "present"
+    update_cache: true
   become: true
-  when: >
-    ansible_distribution != "Fedora"
 
-- name: redhat | installing mariadb mysql
-  dnf:
-    name:
-      - "MariaDB-server"
-      - "galera"
-      - "MySQL-python"
-    state: present
-  become: true
-  when: >
-    ansible_distribution == "Fedora"
-
-- name: Remove migrated-from-my.cnf-settings.conf that is causing MariaDB to not start
+- name: redhat | remove migrated-from-my.cnf-settings.conf that is causing MariaDB to not start
   file:
-    path: /etc/systemd/system/mariadb.service.d/migrated-from-my.cnf-settings.conf
-    state: absent
+    path: "/etc/systemd/system/mariadb.service.d/migrated-from-my.cnf-settings.conf"
+    state: "absent"
   become: true
+  notify: reload systemd daemon
 
-- name: reload systemd for MariaDB changes
-  become: true
-  systemd:
-    daemon_reload: true
-
-- name: redhat | ensuring mariadb mysql is enabled on boot and started
+- name: redhat | ensuring mariadb mysql is enabled on boot
   service:
-    name: "mysql"
-    state: "started"
-    enabled: yes
+    name: "mariadb"
+    enabled: true
   become: true

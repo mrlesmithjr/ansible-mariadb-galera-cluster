@@ -1,0 +1,35 @@
+[mysqld]
+#mysql settings
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+query_cache_size=0
+query_cache_type=0
+bind-address={{ mariadb_bind_address }}
+
+[galera]
+wsrep_on=ON
+wsrep_node_name={{ ansible_hostname }}
+wsrep_provider="{{ galera_wsrep_provider }}"
+wsrep_cluster_name="{{ galera_cluster_name }}"
+{% set _galera_cluster_node_addresses = [] %}
+{% for node in galera_cluster_nodes %}
+{%   set _ = _galera_cluster_node_addresses.append( hostvars[node]['galera_cluster_bind_address'] | default(hostvars[node]['ansible_' ~ galera_cluster_bind_interface]['ipv4']['address']) | mandatory ) %}
+{% endfor %}
+#wsrep_cluster_address="{{ 'gcomm://' ~ _galera_cluster_node_addresses | map('ipwrap') | list | join(',') }}"
+# To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
+wsrep_cluster_address="gcomm://"
+
+wsrep_sst_method=rsync
+{% if galera_enable_galera_monitoring_script %}
+wsrep_notify_cmd='{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}'
+{% endif %}
+
+wsrep_provider_options="gmcast.segment={{ galera_gmcast_segment }}"
+wsrep_provider_options="ist.recv_addr={{ galera_ist_recv_addr }}:{{ galera_ist_recv_addr_port }}"
+wsrep_provider_options="ist.recv_bind={{ galera_ist_recv_bind }}"
+wsrep_node_address="{{ galera_wsrep_node_address }}"
+
+{% if galera_extra_wsrep_provider_options is defined %}
+wsrep_provider_options = "{% for item in galera_extra_wsrep_provider_options %}{% set _key = item.split(': ')[0] %}{% set _val = galera_extra_wsrep_provider_options[_key] %}{{ _key }} = {{ _val }}{% if not loop.last %}; {% endif %}{% endfor %}"
+{% endif %}

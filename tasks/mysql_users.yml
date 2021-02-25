@@ -1,5 +1,5 @@
 ---
-- name: Create MySQL users
+- name: mysql_users | create MySQL users
   mysql_user:
     append_privs: "{{ item.0.append_privs | default('no') }}"
     encrypted: "{{ item.0.encrypted | default('no') }}"
@@ -10,7 +10,7 @@
     priv: "{{ item.0.priv | default('*.*:USAGE') }}"
     state: "{{ item.0.state | default('present') }}"
   become: true
+  no_log: true
   with_subelements:
     - "{{ mariadb_mysql_users }}"
     - hosts
-  no_log: true

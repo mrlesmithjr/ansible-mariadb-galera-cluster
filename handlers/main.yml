@@ -1,13 +1,6 @@
 ---
 # handlers file for ansible-mariadb-galera-cluster
-- name: "restart mysql"
-  service:
-    name: "mysql"
-    state: "restarted"
-  become: true
-
-- name: "reload mysql"
-  service:
-    name: "mysql"
-    state: "reloaded"
+- name: "reload systemd daemon"
+  systemd:
+    daemon_reload: true
   become: true

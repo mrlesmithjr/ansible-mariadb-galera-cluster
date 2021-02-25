@@ -1,0 +1,9 @@
+# Python requirements for executing
+ansible
+ansible-lint
+docker
+mkdocs
+molecule[docker]
+pip-tools
+yamllint
+netaddr

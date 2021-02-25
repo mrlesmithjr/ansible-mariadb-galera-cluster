@@ -9,26 +9,49 @@
   become: true
   register: galera_monitoring_updated
 
-- name: galera_monitoring | restarting mysql on master
-  service:
-    name: "mysql"
+- name: galera_monitoring | restarting mysql on first node
+  service: # noqa 503
+    name: "{{ mariadb_systemd_service_name }}"
     state: "restarted"
   become: true
   when: >
-    inventory_hostname == galera_mysql_master_node and
+    inventory_hostname == galera_mysql_first_node and
     galera_monitoring_updated.changed
 
-- name: galera_monitoring | waiting for mysql to start on master
-  wait_for:
-    host: "{{ galera_cluster_bind_address }}"
-    port: 3306
-  when: inventory_hostname == galera_mysql_master_node
+- name: galera_monitoring | waiting for mysql to start on first node
+  service: # noqa 503
+    name: "{{ mariadb_systemd_service_name }}"
+    state: "started"
+  become: true
+  register: "_mariadb_galera_cluster_node"
+  until: _mariadb_galera_cluster_node.status.ActiveState == "active"
+  retries: 60
+  delay: 5
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
+  when: >
+    inventory_hostname != galera_mysql_first_node and
+    galera_monitoring_updated.changed
 
 - name: galera_monitoring | restarting mysql on additional servers
-  service:
-    name: "mysql"
+  service: # noqa 503
+    name: "{{ mariadb_systemd_service_name }}"
     state: "restarted"
   become: true
+  throttle: 1
   when: >
-    inventory_hostname != galera_mysql_master_node and
+    inventory_hostname != galera_mysql_first_node and
+    galera_monitoring_updated.changed
+
+- name: galera_monitoring | waiting for mysql to start on other nodes
+  service: # noqa 503
+    name: "{{ mariadb_systemd_service_name }}"
+    state: "started"
+  become: true
+  register: "_mariadb_galera_cluster_node"
+  until: _mariadb_galera_cluster_node.status.ActiveState == "active"
+  retries: 60
+  delay: 5
+  when: >
+    inventory_hostname != galera_mysql_first_node and
     galera_monitoring_updated.changed
