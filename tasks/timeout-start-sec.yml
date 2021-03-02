@@ -1,0 +1,22 @@
+---
+# Supplementary configuration file
+- name: timeout-start-sec | Create folder
+  file:
+    path: "/etc/systemd/system/mariadb.service.d"
+    state: "directory"
+    recurse: true
+    owner: "root"
+    group: "root"
+    mode: "u=rwx,g=rx,o=rx"
+  notify: "reload systemd daemon"
+  become: true
+
+- name: timeout-start-sec | Add the overriding file
+  template:
+    src: "etc/systemd/system/mariadb.service.d/timeout-start-sec.conf.j2"
+    dest: "/etc/systemd/system/mariadb.service.d/timeout-start-sec.conf"
+    owner: "root"
+    group: "root"
+    mode: "u=rw,g=r,o=r"
+  notify: "reload systemd daemon"
+  become: true
