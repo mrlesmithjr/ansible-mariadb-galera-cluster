@@ -13,6 +13,33 @@
   register: "galera_cluster_configured"
 
 # Configure common settings for mariadb and galera
+- name: setup_cluster | create TLS certificates directory
+  file:
+    path: "{{ mariadb_certificates_dir }}"
+    state: "directory"
+    owner: "mysql"
+    group: "mysql"
+    mode: '0500'
+  become: true
+  when:
+    - mariadb_tls_files
+    - mariadb_tls_files | length == 3
+
+- name: setup_cluster | copy TLS CA cert, server cert & private key
+  copy:
+    content: "{{ item.value.content }}"
+    dest: "{{ mariadb_certificates_dir }}/{{ item.value.name }}"
+    owner: "mysql"
+    group: "mysql"
+    mode: '0400'
+    backup: true
+  with_dict: "{{ mariadb_tls_files }}"
+  become: true
+  no_log: true
+  when:
+    - mariadb_tls_files
+    - mariadb_tls_files | length == 3
+
 - name: setup_cluster | configuring settings for mariadb and galera
   template:
     src: "{{ item }}.j2"

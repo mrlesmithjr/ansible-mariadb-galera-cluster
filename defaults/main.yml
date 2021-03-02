@@ -49,6 +49,27 @@ mariadb_mysql_settings:
   thread_cache_size: 256
   thread_stack: "192K"
 
+# Define TLS certs & keys which will be used to encrypt mysql, WSREP, SST connections
+# This variable should have defined exactly three items, any other item count is handled like none.
+# Items must be named ca_cert, server_key, server_cert.  Each item must have defined values name and content. 
+# Names will be used to create such file at target system. Content can be defined inline like example below, 
+# or can by linked to variables defined in ansible-vault or other lookup plugins (file, hashicorp vault, etc.)
+#
+# mariadb_tls_files:
+#   ca_cert:
+#     name: "ca.pem"
+#     content: |
+#       -- ca-cert content --
+#   server_key:
+#     name: "server-key.pem"
+#     content: |
+#       -- server-cert content --
+#   server_cert:
+#     name: "server-cert.pem"
+#     content: |
+#       -- server-cert content --
+mariadb_tls_files: []
+
 # Recommended utf8 settings:
 # https://mariadb.com/kb/en/setting-character-sets-and-collations/#example-changing-the-default-character-set-to-utf-8
 # mariadb_charset_server: utf8mb4

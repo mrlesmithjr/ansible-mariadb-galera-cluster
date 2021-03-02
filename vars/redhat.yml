@@ -5,6 +5,7 @@ mariadb_pre_req_packages:
 mariadb_packages:
   - "MariaDB-server"
   - "galera-4"
+mariadb_certificates_dir: "/etc/my.cnf.d/certificates"
 mariadb_systemd_service_name: "mysql"
 mariadb_confs:
   - "etc/my.cnf.d/server.cnf"
