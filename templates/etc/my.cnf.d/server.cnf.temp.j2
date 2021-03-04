@@ -63,6 +63,11 @@ wsrep_cluster_name="{{ galera_cluster_name }}"
 # To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
 wsrep_cluster_address="gcomm://"
 
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_wsrep_tls_enabled %}
+# WSREP TLS encryption settings
+wsrep_provider_options="socket.ssl_cert={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }};socket.ssl_key={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }};socket.ssl_ca={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.ca_cert.name }}"
+{% endif %}
+
 binlog_format=row
 default_storage_engine=InnoDB
 innodb_autoinc_lock_mode=2

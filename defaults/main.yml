@@ -138,6 +138,10 @@ galera_ist_recv_addr_port: "{{ galera_wsrep_node_address_port|int + 1 }}"
 # NAT or in similar cases where the public and private addresses differ.
 galera_ist_recv_bind: "{{ galera_cluster_bind_address }}"
 
+# This option enables configuration TLS encryption for WSREP (disabled by default).
+# To enable encryption mariadb_tls_files must be configured also.
+galera_wsrep_tls_enabled: false
+
 # MariaDB system tunning
 
 # Tune system swappiness. Default value "auto" means don't tune.

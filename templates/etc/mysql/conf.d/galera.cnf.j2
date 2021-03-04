@@ -20,6 +20,11 @@ wsrep_cluster_address="{{ 'gcomm://' ~ _galera_cluster_node_addresses | map('ipw
 # To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
 #wsrep_cluster_address="gcomm://"
 
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_wsrep_tls_enabled %}
+# WSREP TLS encryption settings
+wsrep_provider_options="socket.ssl_cert={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }};socket.ssl_key={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }};socket.ssl_ca={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.ca_cert.name }}"
+{% endif %}
+
 wsrep_sst_method=rsync
 {% if galera_enable_galera_monitoring_script %}
 wsrep_notify_cmd='{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}'
