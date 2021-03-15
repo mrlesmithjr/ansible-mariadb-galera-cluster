@@ -91,6 +91,7 @@
   wait_for:
     timeout: 15
   delegate_to: localhost
+  become: false
   when: >
     not galera_cluster_configured.stat.exists
 
@@ -137,6 +138,7 @@
   wait_for:
     timeout: 15
   delegate_to: localhost
+  become: false
   when: >
     not galera_cluster_configured.stat.exists
 
@@ -157,6 +159,7 @@
   wait_for:
     timeout: 15
   delegate_to: localhost
+  become: false
   when: >
     not galera_cluster_configured.stat.exists
 
@@ -206,6 +209,7 @@
   wait_for: # noqa 503
     timeout: 15
   delegate_to: localhost
+  become: false
   when: >
     _mariadb_galera_cluster_reconfigured.changed or
     _mariadb_galera_cluster_node_restarted.changed
