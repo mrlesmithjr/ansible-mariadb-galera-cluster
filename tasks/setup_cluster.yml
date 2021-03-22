@@ -172,6 +172,7 @@
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true
+  throttle: 1
   register: "_mariadb_galera_cluster_joined"
   until: _mariadb_galera_cluster_joined.status.ActiveState == "active"
   retries: 60
@@ -236,5 +237,3 @@
   when: >
     _mariadb_galera_cluster_reconfigured.changed or
     _mariadb_galera_cluster_node_restarted.changed
-
-
