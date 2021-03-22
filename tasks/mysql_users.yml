@@ -11,6 +11,8 @@
     state: "{{ item.0.state | default('present') }}"
   become: true
   no_log: true
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
   with_subelements:
     - "{{ mariadb_mysql_users }}"
-    - hosts
+    - "hosts"
