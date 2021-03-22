@@ -80,9 +80,21 @@ bind-address={{ mariadb_bind_address }}
 #wsrep_slave_threads=1
 #innodb_flush_log_at_trx_commit=0
 
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_sst_tls_enabled  %}
+wsrep_sst_method=mariabackup
+wsrep_sst_auth="{{ mariadb_sst_user }}:{{ mariadb_sst_password }}"
+{% else %}
 wsrep_sst_method=rsync
+{% endif %}
 {% if galera_enable_galera_monitoring_script %}
 wsrep_notify_cmd='{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}'
+{% endif %}
+
+[sst]
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_sst_tls_enabled  %}
+encrypt=3
+tcert = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }}
+tkey = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }}
 {% endif %}
 
 # this is only for embedded server

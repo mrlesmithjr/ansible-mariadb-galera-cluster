@@ -70,6 +70,6 @@
 
 - name: debian | installing mariadb-galera packages
   apt:
-    name: "{{ mariadb_packages }}"
+    name: "{{ galera_sst_tls_enabled | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
     state: "present"
   become: true

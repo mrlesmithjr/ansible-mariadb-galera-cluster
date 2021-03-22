@@ -9,6 +9,8 @@ mariadb_pre_req_packages:
 mariadb_debian_repo_key: "0xF1656F24C74CD1D8"
 mariadb_packages:
   - "mariadb-server"
+mariabackup_packages:
+  - "mariadb-backup"
 mariadb_certificates_dir: "/etc/mysql/certificates"
 mariadb_systemd_service_name: "mysql"
 mariadb_confs:

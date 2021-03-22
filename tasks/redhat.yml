@@ -57,7 +57,7 @@
 
 - name: redhat | installing mariadb mysql
   yum:
-    name: "{{ mariadb_packages }}"
+    name: "{{ galera_sst_tls_enabled | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
     state: "present"
     update_cache: true
   become: true
