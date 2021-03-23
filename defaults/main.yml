@@ -60,7 +60,7 @@ mariadb_charset_server: "auto"
 mariadb_collation_server: "auto"
 # Role default: utf8
 mariadb_charset_client: "utf8"
-  
+
 # If this is defined it will create a file with overrides
 # mariadb_config_overrides:
 #   mariadb:
@@ -258,6 +258,10 @@ galera_notify_mail_to: "{{ galera_email_notifications }}"
 
 # Define smtp server to send notifications through
 galera_notify_smtp_server: "{{ mariadb_smtp_server }}"
+galera_notify_smtp_auth: "False"
+galera_notify_smtp_username: ""
+galera_notify_smtp_password: ""
+galera_notify_smtp_port: 25
 
 # Defines if cacti monitoring should be enabled for mysql - If used. May remove later.
 galera_enable_cacti_monitoring: false
