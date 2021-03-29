@@ -6,11 +6,16 @@
     host: "{{ item.1 }}"
     login_unix_socket: "{{ mariadb_login_unix_socket }}"
     name: "{{ item.0.name }}"
-    password: "{{ item.0.password }}"
+    password: "{{ item.0.password | default(omit) }}"
+    plugin: "{{ item.0.plugin | default(omit) }}"
+    plugin_auth_string: "{{ item.0.plugin_auth_string | default(omit) }}"
+    plugin_hash_string: "{{ item.0.plugin_hash_string | default(omit) }}"
     priv: "{{ item.0.priv | default('*.*:USAGE') }}"
     state: "{{ item.0.state | default('present') }}"
   become: true
   no_log: true
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
   with_subelements:
-    - "{{ mariadb_mysql_users }}"
-    - hosts
+    - "{{ galera_sst_tls_enabled | ternary( mariadb_mysql_users | union( mariadb_sst_user ), mariadb_mysql_users ) }}"
+    - "hosts"

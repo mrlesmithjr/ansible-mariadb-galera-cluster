@@ -59,6 +59,12 @@ slow_query_log
 long_query_time = {{ mariadb_long_query_time }}
 {% endif %}
 
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 %}
+ssl_ca = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.ca_cert.name }}
+ssl_cert = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }}
+ssl_key = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }}
+{% endif %}
+
 [mysqldump]
 max_allowed_packet = 16M
 quick

@@ -41,6 +41,12 @@ slow_query_log
 long_query_time = {{ mariadb_long_query_time }}
 {% endif %}
 
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 %}
+ssl_ca = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.ca_cert.name }}
+ssl_cert = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }}
+ssl_key = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }}
+{% endif %}
+
 #
 # * Galera-related settings
 #
@@ -57,6 +63,11 @@ wsrep_cluster_address="{{ 'gcomm://' ~ _galera_cluster_node_addresses | map('ipw
 # To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
 #wsrep_cluster_address="gcomm://"
 
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_wsrep_tls_enabled %}
+# WSREP TLS encryption settings
+wsrep_provider_options="socket.ssl_cert={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }};socket.ssl_key={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }};socket.ssl_ca={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.ca_cert.name }}"
+{% endif %}
+
 binlog_format=row
 default_storage_engine=InnoDB
 innodb_autoinc_lock_mode=2
@@ -69,9 +80,21 @@ bind-address={{ mariadb_bind_address }}
 #wsrep_slave_threads=1
 #innodb_flush_log_at_trx_commit=0
 
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_sst_tls_enabled  %}
+wsrep_sst_method=mariabackup
+wsrep_sst_auth="{{ mariadb_sst_user }}:{{ mariadb_sst_password }}"
+{% else %}
 wsrep_sst_method=rsync
+{% endif %}
 {% if galera_enable_galera_monitoring_script %}
 wsrep_notify_cmd='{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}'
+{% endif %}
+
+[sst]
+{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_sst_tls_enabled  %}
+encrypt=3
+tcert = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }}
+tkey = {{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }}
 {% endif %}
 
 # this is only for embedded server

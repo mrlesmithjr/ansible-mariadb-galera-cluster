@@ -3,6 +3,7 @@
 - name: gather os specific variables
   include_vars: "{{ item }}"
   tags:
+    - always
     - install
     - config
   with_first_found:
@@ -41,6 +42,11 @@
     - install
     - config
 
+- import_tasks: mysql_users.yml
+  tags:
+    - config
+    - mysql_users
+
 - import_tasks: setup_cluster.yml
   tags:
     - config
@@ -53,11 +59,6 @@
   tags:
     - mysql_databases
   when: mariadb_databases | count > 0
-
-- import_tasks: mysql_users.yml
-  tags:
-    - mysql_users
-  when: mariadb_mysql_users is defined
 
 - import_tasks: galera_monitoring.yml
   tags:

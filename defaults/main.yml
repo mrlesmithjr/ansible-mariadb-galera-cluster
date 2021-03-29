@@ -49,6 +49,27 @@ mariadb_mysql_settings:
   thread_cache_size: 256
   thread_stack: "192K"
 
+# Define TLS certs & keys which will be used to encrypt mysql, WSREP, SST connections
+# This variable should have defined exactly three items, any other item count is handled like none.
+# Items must be named ca_cert, server_key, server_cert.  Each item must have defined values name and content. 
+# Names will be used to create such file at target system. Content can be defined inline like example below, 
+# or can by linked to variables defined in ansible-vault or other lookup plugins (file, hashicorp vault, etc.)
+#
+# mariadb_tls_files:
+#   ca_cert:
+#     name: "ca.pem"
+#     content: |
+#       -- ca-cert content --
+#   server_key:
+#     name: "server-key.pem"
+#     content: |
+#       -- server-cert content --
+#   server_cert:
+#     name: "server-cert.pem"
+#     content: |
+#       -- server-cert content --
+mariadb_tls_files: []
+
 # Recommended utf8 settings:
 # https://mariadb.com/kb/en/setting-character-sets-and-collations/#example-changing-the-default-character-set-to-utf-8
 # mariadb_charset_server: utf8mb4
@@ -116,6 +137,32 @@ galera_ist_recv_addr_port: "{{ galera_wsrep_node_address_port|int + 1 }}"
 # from wsrep_node_address. You may find it useful when the node runs behind a
 # NAT or in similar cases where the public and private addresses differ.
 galera_ist_recv_bind: "{{ galera_cluster_bind_address }}"
+
+# This option enables configuration TLS encryption for WSREP (disabled by default).
+# To enable encryption mariadb_tls_files must be configured also.
+galera_wsrep_tls_enabled: false
+
+# This option enables configuration TLS encryption for SST (disabled by default).
+# To enable encryption mariadb_tls_files must be configured also.
+galera_sst_tls_enabled: false
+
+# If you enable galera_sst_tls_enabled mariabackup need to authenticate locally on donor node.
+# Credentials bellow are appended to other user defined mariadb_mysql_users.
+# By default unix_socket auth plugin is used, for more info see documentaion
+# https://mariadb.com/kb/en/mariabackup-sst-method/#passwordless-authentication-unix-socket.
+# In MariaDB 10.4.3 and later unix_socket is instaleld by default, for later version see
+# https://mariadb.com/kb/en/authentication-plugin-unix-socket.
+# If you need to use password auth change set maruadb_sst_user.plugin to mysql_native_password
+# and set mariadb_sst_password.
+mariadb_sst_username: "mysql"
+mariadb_sst_password: ""
+mariadb_sst_user:
+  - name: "{{ mariadb_sst_username }}"
+    hosts:
+      - "localhost"
+    plugin: "unix_socket"
+    password: "{{ mariadb_sst_password }}"
+    priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
 
 # MariaDB system tunning
 

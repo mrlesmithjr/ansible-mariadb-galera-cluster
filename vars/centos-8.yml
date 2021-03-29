@@ -6,6 +6,9 @@ mariadb_packages:
   - "python3-mysql"
   - "MariaDB-server"
   - "galera-4"
+mariabackup_packages:
+  - "MariaDB-backup"
+mariadb_certificates_dir: "/etc/my.cnf.d/certificates"
 mariadb_systemd_service_name: "mariadb"
 mariadb_confs:
   - "etc/my.cnf.d/server.cnf"
