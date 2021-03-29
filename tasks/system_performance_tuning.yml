@@ -9,6 +9,11 @@
     ansible_service_mgr == "systemd" and
     mariadb_oom_score_adjust != 0
 
+- include: timeout-start-sec.yml
+  when: >
+    ansible_service_mgr == "systemd" and
+    mariadb_timeout_start_sec != 0
+
 # Borrowed from percona xtradb cluster ansible role:
 # https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/bootstrap.yml
 # Many thanks to Cedric DELGEHIER

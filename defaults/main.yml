@@ -180,6 +180,9 @@ mariadb_oom_score_adjust: 0
 # notice for SystemD: 0 does not mean 'unlimited', use 'infinity' for unlimited
 mariadb_max_open_files: 0
 
+# Add the posibility to adjust timeout for starting service (only works for SystemD)
+mariadb_timeout_start_sec: 0
+
 # InnoDB tuning
 
 # Amount of memory to use for InnoDB row cache.
