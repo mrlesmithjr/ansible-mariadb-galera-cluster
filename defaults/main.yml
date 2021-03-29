@@ -114,8 +114,7 @@ galera_cluster_name: "vagrant-test"
 galera_cluster_nodes_group: "galera-cluster-nodes"
 
 # https://mariadb.com/kb/en/mariadb/wsrep_provider_options/
-galera_extra_wsrep_provider_options:
-  []
+galera_extra_wsrep_provider_options: []
   # evs.auto_evict: 1
   # evs.delayed_margin: 'PT5S'
   # evs.delayed_keep_period: 'PT45S'
@@ -163,6 +162,13 @@ mariadb_sst_user:
     plugin: "unix_socket"
     password: "{{ mariadb_sst_password }}"
     priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
+
+# This option defines the wsrep_sst_method that should be used by the cluster.
+# Possible options:
+#  - mariabackup (recommended for MariaDB),
+#  - xtrabackup-v2 (there are limitations, please see https://mariadb.com/kb/en/xtrabackup-v2-sst-method/)
+#  - rsync
+galera_sst_method: rsync
 
 # MariaDB system tunning
 
