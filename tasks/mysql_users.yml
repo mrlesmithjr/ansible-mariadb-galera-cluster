@@ -17,5 +17,5 @@
   delegate_to: "{{ galera_mysql_first_node }}"
   run_once: true
   with_subelements:
-    - "{{ ternary( mariadb_mysql_users | union( mariadb_sst_user ), mariadb_mysql_users ) if (galera_sst_method == 'mariabackup') else mariadb_mysql_users }}"
+    - "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_mysql_users | union( mariadb_sst_user ), mariadb_mysql_users ) }}"
     - "hosts"
