@@ -152,7 +152,7 @@ galera_sst_tls_enabled: false
 # https://mariadb.com/kb/en/mariabackup-sst-method/#passwordless-authentication-unix-socket.
 # In MariaDB 10.4.3 and later unix_socket is instaleld by default, for later version see
 # https://mariadb.com/kb/en/authentication-plugin-unix-socket.
-# If you need to use password auth change set maruadb_sst_user.plugin to mysql_native_password
+# If you need to use password auth change set mariadb_sst_user.plugin to mysql_native_password
 # and set mariadb_sst_password.
 mariadb_sst_username: "mysql"
 mariadb_sst_password: ""
