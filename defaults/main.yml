@@ -166,7 +166,7 @@ mariadb_sst_user:
 # This option defines the wsrep_sst_method that should be used by the cluster.
 # Possible options:
 #  - mariabackup - recommended for MariaDB - default if TLS is enabled via galera_sst_tls_enabled,
-#  - xtrabackup-v2 - there are limitations, please see https://mariadb.com/kb/en/xtrabackup-v2-sst-method/
+#  - xtrabackup-v2 - not recommended, not implemented by this role, see limitations at https://mariadb.com/kb/en/xtrabackup-v2-sst-method/
 #  - rsync - default
 galera_sst_method: "{{ (mariadb_tls_files and mariadb_tls_files|length == 3 and galera_sst_tls_enabled) | ternary('mariabackup', 'rsync') }}"
 
