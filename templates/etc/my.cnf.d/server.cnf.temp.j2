@@ -82,7 +82,7 @@ bind-address={{ mariadb_bind_address }}
 
 {% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_sst_tls_enabled  %}
 wsrep_sst_method=mariabackup
-wsrep_sst_auth="{{ mariadb_sst_user }}:{{ mariadb_sst_password }}"
+wsrep_sst_auth="{{ mariadb_sst_username }}:{{ mariadb_sst_password }}"
 {% else %}
 wsrep_sst_method=rsync
 {% endif %}
