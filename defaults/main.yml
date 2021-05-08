@@ -123,7 +123,10 @@ galera_extra_wsrep_provider_options: []
 # value is an integer from 0 to 255
 # By default all nodes are placed in the same segment (0)
 # http://galeracluster.com/documentation-webpages/galeraparameters.html#gmcast-segment
-galera_gmcast_segment: "0"
+#
+# Set to true to add `gmcast.segment` in each node,
+# On each node you must define `galera_gmcast_segment` variable
+galera_use_gmcast_segment: false
 
 # Address to listen on for Incremental State Transfer.
 # By default this is the <address>:<port+1> from wsrep_node_address.
