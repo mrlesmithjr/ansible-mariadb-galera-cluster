@@ -4,10 +4,9 @@
   file:
     path: "/etc/systemd/system/mariadb.service.d"
     state: "directory"
-    recurse: true
     owner: "root"
     group: "root"
-    mode: "u=rw,g=r,o=r"
+    mode: "u=rwx,g=rx,o=rx"
   notify: "reload systemd daemon"
   become: true
 
