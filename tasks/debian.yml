@@ -45,7 +45,7 @@
 - name: debian | add an overrides file
   template:
     src: "etc/mariadb_overrides.cnf.j2"
-    dest: "/etc/my.cnf.d/overrides.cnf"
+    dest: "/etc/mysql/conf.d/overrides.cnf"
     mode: '0644'
   become: true
   when: mariadb_config_overrides is defined
