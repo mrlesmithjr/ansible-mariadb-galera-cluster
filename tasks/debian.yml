@@ -18,7 +18,14 @@
     id: "{{ mariadb_debian_repo_key }}"
     state: "present"
   become: true
-  when: galera_enable_mariadb_repo|bool
+  when: galera_enable_mariadb_repo|bool and not mariadb_debian_repo_key_url is defined
+  
+- name: debian | adding MariaDB Repo Keys
+  apt_key:
+    url: "{{ mariadb_debian_repo_key_url }}"
+    state: "present"
+  become: true
+  when: galera_enable_mariadb_repo|bool and mariadb_debian_repo_key_url is defined
 
 - name: debian | pinning MariaDB Repo
   template:
