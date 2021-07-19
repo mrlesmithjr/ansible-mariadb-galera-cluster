@@ -42,6 +42,16 @@
   become: true
   when: galera_enable_mariadb_repo|bool
 
+- name: debian | precreate /etc/mysql/conf.d in case we need to add mariadb_config_overrides file
+  file:
+    path: "/etc/mysql/conf.d"
+    state: "directory"
+    mode: 0755
+    recurse: true
+  become: true
+  changed_when: false
+  when: mariadb_config_overrides is defined
+
 - name: debian | add an overrides file
   template:
     src: "etc/mariadb_overrides.cnf.j2"
