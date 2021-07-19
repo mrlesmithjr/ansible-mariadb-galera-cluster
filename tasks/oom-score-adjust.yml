@@ -4,7 +4,6 @@
   file:
     path: "/etc/systemd/system/mariadb.service.d"
     state: "directory"
-    recurse: true
     owner: "root"
     group: "root"
     mode: "u=rwx,g=rx,o=rx"
