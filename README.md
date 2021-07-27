@@ -40,6 +40,13 @@ None
 
 [Example playbook](./playbook.yml)
 
+## Update the root password
+
+To update a existing mysql root password:
+- Update the variable `mariadb_mysql_root_password`
+- Run a ansible-playbook within tags updating_root_passwords (`--tags updating_root_passwords`)
+- Re-run a ansible-playbook without tags
+
 ## License
 
 MIT

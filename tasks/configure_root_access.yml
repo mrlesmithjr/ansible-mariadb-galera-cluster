@@ -26,6 +26,8 @@
     - "127.0.0.1"
     - "::1"
     - "localhost"
+  tags:
+    - updating_root_passwords
 
 - name: configure_root_access | updating root passwords (allow from anywhere)
   mysql_user:
@@ -42,3 +44,5 @@
   with_items:
     - "%"
   when: galera_allow_root_from_any|bool
+  tags:
+    - updating_root_passwords
