@@ -22,7 +22,7 @@
     mode: '0500'
   become: true
   when:
-    - mariadb_tls_files
+    - mariadb_tls_files is defined
     - mariadb_tls_files | length == 3
 
 - name: setup_cluster | copy TLS CA cert, server cert & private key
@@ -37,7 +37,7 @@
   become: true
   no_log: true
   when:
-    - mariadb_tls_files
+    - mariadb_tls_files is defined
     - mariadb_tls_files | length == 3
 
 - name: setup_cluster | configuring settings for mariadb and galera
