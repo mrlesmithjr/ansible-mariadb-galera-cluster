@@ -328,3 +328,12 @@ galera_enable_cacti_monitoring: false
 # Define the cacti user info for cacti db monitoring - If used. May remove later.
 cacti_db_password: "cactiuser"
 cacti_db_user: "cactiuser"
+
+# Defines if checkmk monitoring should be enabled for myssql
+galera_enable_checkmk_monitoring: false
+
+# Define check_mk info for checkmk db monitoring
+checkmk_db_user: "checkmk"
+checkmk_db_password: "MyPassword"
+# Permission need for checkmk monitoring
+# priv: '*.*:SELECT,SHOW DATABASES,REPLICATION CLIENT' (from localhost)

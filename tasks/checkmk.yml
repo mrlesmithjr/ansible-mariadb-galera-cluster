@@ -1,0 +1,11 @@
+---
+- name: Set mysql.cfg for checkmk
+  copy:
+    content: |
+      [client]
+      user={{ checkmk_db_user }}
+      password={{ checkmk_db_password }}
+    dest: /etc/check_mk/mysql.cfg
+    owner: root
+    group: root
+    mode: 0400
