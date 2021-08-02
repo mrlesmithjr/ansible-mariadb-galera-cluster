@@ -69,3 +69,8 @@
   tags:
     - config_cacti_monitoring
   when: galera_enable_cacti_monitoring
+
+- import_tasks: cluster_check.yml
+  tags:
+    - config_hacluster
+  when: galera_enable_hacluster

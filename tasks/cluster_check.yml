@@ -1,0 +1,51 @@
+---
+# From https://github.com/olafz/percona-clustercheck/blob/master/clustercheck
+
+#Copy the clustercheck from the repository to /usr/bin and make it executable.
+- name: Copy clustercheck
+  copy:
+    src: clustercheck
+    dest: /usr/bin/clustercheck
+    mode: '0555'
+
+#Then copy the mysqlck.socket and mysqlchk@.service files (under systemd) in the repository to /usr/lib/systemd/system and make them world-readable.
+
+- name: Copy mysqlchk@.service
+  copy:
+    dest: /etc/systemd/system/mysqlchk@.service
+    content: |
+      [Unit]
+      Description=Galera Cluster node check service
+
+      [Service]
+      Type=oneshot
+      ExecStart=-/usr/bin/clustercheck
+      StandardInput=socket
+      TimeoutStopSec=5
+
+- name: Copy mysqlck.socket
+  copy:
+    dest: /etc/systemd/system/mysqlchk.socket
+    content: |
+      [Unit]
+      Description=Galera Cluster node check socket
+      PartOf=mysqlchk@.service
+
+      [Socket]
+      ListenStream=9200
+      Accept=yes
+      TriggerLimitIntervalSec=0
+      TriggerLimitBurst=0
+
+      [Install]
+      WantedBy=sockets.target
+
+#To activate the socket
+
+- name: enable mysqlchk.socket
+  systemd:
+    name: mysqlchk.socket
+    state: started
+    enabled: yes
+
+# Systemd will now service requests to port 9200 with the clustercheck script, and HAproxy is ready to check MySQL via HTTP port 9200.
