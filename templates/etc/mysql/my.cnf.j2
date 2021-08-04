@@ -40,6 +40,9 @@ collation-server      = {{ mariadb_collation_server }}
 {% if mariadb_innodb_buffer_pool_size | default('auto') != "auto" %}
 innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
 {% endif %}
+{% if mariadb_innodb_lock_wait_timeout | default('50') != "50" %}
+innodb_lock_wait_timeout = {{ mariadb_innodb_lock_wait_timeout }}
+{% endif %}
 {% if mariadb_innodb_buffer_pool_instances | default('auto') != "auto" %}
 innodb_buffer_pool_instances = {{ mariadb_innodb_buffer_pool_instances }}
 {% endif %}

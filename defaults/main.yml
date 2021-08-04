@@ -228,6 +228,9 @@ mariadb_one_gig_bytes: "{{ 1024 * 1024 * 1024 }}"
 # Maximum allowed concurrent connections. MySQL default is 151
 mariadb_max_connections: "auto"
 
+# The length of time in seconds an InnoDB transaction waits for a row lock before giving up.
+mariadb_innodb_lock_wait_timeout: "50"
+
 # Queries that take more time than 'mariadb_long_query_time' to complete are
 # considered as slow. Values in seconds or 'auto' for the MySQL default (10)
 # phpmyadmin recommends this value to be set to "5" or less.
