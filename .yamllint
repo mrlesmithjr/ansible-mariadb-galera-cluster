@@ -3,7 +3,8 @@
 extends: default
 
 ignore: |
-  venv/
+  .venv/
+  .cache/
 
 rules:
   braces:

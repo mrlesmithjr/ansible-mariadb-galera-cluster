@@ -2,6 +2,8 @@
 galaxy_info:
   author: Larry Smith Jr.
   description: An ansible role to install/configure a [MariaDB-Galera Cluster](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/)
+  role_name: mariadb-galera-cluster
+  namespace: mrlesmithjr
 
   license: MIT
 

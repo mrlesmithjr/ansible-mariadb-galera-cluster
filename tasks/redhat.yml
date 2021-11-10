@@ -5,7 +5,7 @@
     file: "MariaDB"
     description: "MariaDB"
     baseurl: "{{ mariadb_redhat_repo }}"
-    gpgkey: "{{ mariadb_redhat_repo_key }}" 
+    gpgkey: "{{ mariadb_redhat_repo_key }}"
     gpgcheck: true
   become: true
   register: "repo_added"
@@ -80,4 +80,3 @@
     state: started
   become: true
   when: inventory_hostname == galera_mysql_first_node
-
