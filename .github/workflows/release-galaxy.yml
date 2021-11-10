@@ -5,14 +5,14 @@ on:
     branches:
       - main
       - master
-      - "releases/**"
+      # - "releases/**"
     tags:
       - "*"
-  pull_request:
-    branches:
-      - main
-      - master
-      - "releases/**"
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - master
+  #     - "releases/**"
 
 jobs:
   galaxy:
