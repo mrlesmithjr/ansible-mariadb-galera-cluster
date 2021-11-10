@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ansible-mariadb-galera-cluster"
+version = "0.1.0"
+description = ""
+authors = ["Larry Smith Jr. <mrlesmithjr@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+ansible = "^4.8.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+pylint = "^2.11.1"
+black = "^21.10b0"
+ansible-lint = "^5.2.1"
+mkdocs = "^1.2.3"
+yamllint = "^1.26.3"
+molecule = {extras = ["docker"], version = "^3.5.2"}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
