@@ -15,9 +15,9 @@ jobs:
           - debian9
           - debian10
           # - fedora
-          - ubuntu1604
+          # - ubuntu1604
           - ubuntu1804
-          - ubuntu2004
+          # - ubuntu2004
         python-version: [3.8]
 
     steps:
