@@ -51,8 +51,8 @@ mariadb_mysql_settings:
 
 # Define TLS certs & keys which will be used to encrypt mysql, WSREP, SST connections
 # This variable should have defined exactly three items, any other item count is handled like none.
-# Items must be named ca_cert, server_key, server_cert.  Each item must have defined values name and content. 
-# Names will be used to create such file at target system. Content can be defined inline like example below, 
+# Items must be named ca_cert, server_key, server_cert.  Each item must have defined values name and content.
+# Names will be used to create such file at target system. Content can be defined inline like example below,
 # or can by linked to variables defined in ansible-vault or other lookup plugins (file, hashicorp vault, etc.)
 #
 # mariadb_tls_files:
@@ -114,7 +114,8 @@ galera_cluster_name: "vagrant-test"
 galera_cluster_nodes_group: "galera-cluster-nodes"
 
 # https://mariadb.com/kb/en/mariadb/wsrep_provider_options/
-galera_extra_wsrep_provider_options: []
+galera_extra_wsrep_provider_options:
+  []
   # evs.auto_evict: 1
   # evs.delayed_margin: 'PT5S'
   # evs.delayed_keep_period: 'PT45S'

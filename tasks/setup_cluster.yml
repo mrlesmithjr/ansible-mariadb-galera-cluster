@@ -19,7 +19,7 @@
     state: "directory"
     owner: "mysql"
     group: "mysql"
-    mode: '0500'
+    mode: "0500"
   become: true
   when:
     - mariadb_tls_files is defined
@@ -31,7 +31,7 @@
     dest: "{{ mariadb_certificates_dir }}/{{ item.value.name }}"
     owner: "mysql"
     group: "mysql"
-    mode: '0400'
+    mode: "0400"
     backup: true
   with_dict: "{{ mariadb_tls_files }}"
   become: true
@@ -44,7 +44,7 @@
   template:
     src: "{{ item }}.j2"
     dest: "/{{ item }}"
-    mode: '0644'
+    mode: "0644"
   become: true
   register: "_mariadb_galera_cluster_reconfigured"
   loop: "{{ mariadb_confs }}"
@@ -122,7 +122,7 @@
   when: >
     not galera_cluster_configured.stat.exists
 
-- name: setup_cluster | killing lingering mysql processes to ensure mysql is stopped
+- name: setup_cluster | killing lingering mysql processes to ensure mysql is stopped # noqa ignore-errors
   command: "pkill {{ mariadb_systemd_service_name }}"
   become: true
   ignore_errors: true
@@ -132,7 +132,7 @@
   template:
     src: "{{ item }}.temp.j2"
     dest: "/{{ item }}"
-    mode: '0644'
+    mode: "0644"
   become: true
   loop: "{{ mariadb_temp_confs }}"
   when: >
@@ -195,7 +195,7 @@
   template:
     src: "{{ item }}.j2"
     dest: "/{{ item }}"
-    mode: '0644'
+    mode: "0644"
   loop: "{{ mariadb_confs }}"
   become: true
   when: >
@@ -216,7 +216,7 @@
   file:
     path: "/etc/galera_cluster_configured"
     state: "touch"
-    mode: '0644'
+    mode: "0644"
   become: true
   when: not galera_cluster_configured.stat.exists
 
