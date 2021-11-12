@@ -1,6 +1,16 @@
 ---
 name: Molecule Test
-on: push
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
+  pull_request:
+    branches:
+      - develop
+      - main
+      - master
+
 jobs:
   build:
     runs-on: ubuntu-latest
