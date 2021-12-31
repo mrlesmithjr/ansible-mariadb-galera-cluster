@@ -22,9 +22,6 @@ collation-server      = {{ mariadb_collation_server }}
 {% if mariadb_innodb_buffer_pool_size | default('auto') != "auto" %}
 innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
 {% endif %}
-{% if mariadb_innodb_buffer_pool_instances | default('auto') != "auto" %}
-innodb_buffer_pool_instances = {{ mariadb_innodb_buffer_pool_instances }}
-{% endif %}
 {% if mariadb_innodb_read_io_threads | default('auto') != "auto" %}
 innodb_read_io_threads = {{ mariadb_innodb_read_io_threads }}
 {% endif %}

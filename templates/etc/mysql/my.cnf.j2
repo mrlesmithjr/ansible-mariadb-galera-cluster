@@ -11,21 +11,18 @@ socket = {{ mariadb_login_unix_socket }}
 [mysqld]
 basedir = /usr
 datadir	= {{ mariadb_mysql_settings['datadir'] }}
-expire_logs_days = {{ mariadb_mysql_settings['expire_logs_days'] }}
 key_buffer_size = {{ mariadb_mysql_settings['key_buffer_size'] }}
 lc-messages-dir = /usr/share/mysql
 log_error = /var/log/mysql/error.log
 max_allowed_packet = {{ mariadb_mysql_settings['max_allowed_packet'] }}
 max_binlog_size = {{ mariadb_mysql_settings['max_binlog_size'] }}
 myisam-recover = BACKUP
-pid-file = /var/run/mysqld/mysqld.pid
 port = {{ mariadb_mysql_port }}
 query_cache_limit = {{ mariadb_mysql_settings['query_cache_limit'] }}
 query_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
 skip-external-locking
 socket = {{ mariadb_login_unix_socket }}
 thread_cache_size = {{ mariadb_mysql_settings['thread_cache_size'] }}
-thread_stack = {{ mariadb_mysql_settings['thread_stack'] }}
 tmpdir = /tmp
 user = mysql
 
@@ -42,9 +39,6 @@ innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
 {% endif %}
 {% if mariadb_innodb_lock_wait_timeout | default('50') != "50" %}
 innodb_lock_wait_timeout = {{ mariadb_innodb_lock_wait_timeout }}
-{% endif %}
-{% if mariadb_innodb_buffer_pool_instances | default('auto') != "auto" %}
-innodb_buffer_pool_instances = {{ mariadb_innodb_buffer_pool_instances }}
 {% endif %}
 {% if mariadb_innodb_read_io_threads | default('auto') != "auto" %}
 innodb_read_io_threads = {{ mariadb_innodb_read_io_threads }}

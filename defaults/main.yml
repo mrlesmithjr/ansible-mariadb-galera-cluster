@@ -38,7 +38,6 @@ mariadb_mysql_mem_multiplier: .25
 
 mariadb_mysql_settings:
   datadir: "/var/lib/mysql"
-  expire_logs_days: 10
   #Default is 16M
   key_buffer_size: "{{ (ansible_memtotal_mb | int * mariadb_mysql_mem_multiplier) | round | int }}M"
   max_allowed_packet: "16M"
@@ -47,7 +46,6 @@ mariadb_mysql_settings:
   query_cache_size: "16M"
   # MariaDB default: https://mariadb.com/kb/en/server-system-variables/#thread_cache_size
   thread_cache_size: 256
-  thread_stack: "192K"
 
 # Define TLS certs & keys which will be used to encrypt mysql, WSREP, SST connections
 # This variable should have defined exactly three items, any other item count is handled like none.
@@ -199,12 +197,6 @@ mariadb_timeout_start_sec: 0
 # Set to a specific amount in bytes or to "auto" for server defaults.
 mariadb_innodb_buffer_pool_size: "auto"
 
-# How many pool instances to use for the buffer pool
-# Each instance should ideally be at least 1GB in size.
-# Set to "auto" for server defaults
-# https://mariadb.com/kb/en/innodb-buffer-pool/#innodb_buffer_pool_instances
-mariadb_innodb_buffer_pool_instances: "auto"
-
 # Automatic pool size tuning example:
 
 # What percentage of system memory to use for InnoDB row cache
@@ -215,16 +207,6 @@ mariadb_innodb_mem_multiplier: 0.5
 # mariadb_innodb_buffer_pool_size: >-
 #   {{ (ansible_memtotal_mb|int * mariadb_innodb_mem_multiplier * 1024 * 1024)
 #   | round | int }}
-
-# Bytes in a gigabyte. Only used internally to calculate the number of
-# pool instances in "mariadb_innodb_buffer_pool_instances"
-mariadb_one_gig_bytes: "{{ 1024 * 1024 * 1024 }}"
-
-# Calculate the amount of instances so that they are about 1G in size
-# mariadb_innodb_buffer_pool_instances: >-
-#   {% if mariadb_innodb_buffer_pool_size|int > mariadb_one_gig_bytes|int %}{{
-#   (mariadb_innodb_buffer_pool_size|int / mariadb_one_gig_bytes|int) |abs |int
-#   }}{% else %}1{% endif %}
 
 # Maximum allowed concurrent connections. MySQL default is 151
 mariadb_max_connections: "auto"
