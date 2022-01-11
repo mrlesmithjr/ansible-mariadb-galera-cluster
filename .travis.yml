@@ -10,6 +10,7 @@ env:
   - molecule_distro=centos8
   - molecule_distro=debian9
   - molecule_distro=debian10
+  - molecule_distro=debian11
 #  - molecule_distro=fedora
   - molecule_distro=ubuntu1604
   - molecule_distro=ubuntu1804
