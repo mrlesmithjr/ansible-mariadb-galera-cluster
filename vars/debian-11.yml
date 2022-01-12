@@ -14,7 +14,6 @@ mariabackup_packages:
 mariadb_certificates_dir: "/etc/mysql/certificates"
 mariadb_systemd_service_name: "mysql"
 mariadb_confs:
-  - "etc/mysql/debian.cnf"
   - "etc/mysql/my.cnf"
   - "etc/mysql/conf.d/galera.cnf"
 mariadb_temp_confs:
