@@ -79,7 +79,11 @@ innodb_autoinc_lock_mode=2
 bind-address={{ mariadb_bind_address }}
 #
 # Optional setting
-#wsrep_slave_threads=1
+{% if galera_wsrep_slave_threads == "auto" %}
+wsrep_slave_threads={{ 1 if (ansible_processor_vcpus <= 1) else (ansible_processor_vcpus - 1) }}
+{% else %}
+wsrep_slave_threads={{ galera_wsrep_slave_threads }}
+{% endif %}
 #innodb_flush_log_at_trx_commit=0
 
 {% if galera_enable_galera_monitoring_script %}

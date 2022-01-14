@@ -105,6 +105,11 @@ galera_wsrep_node_address: "{{ galera_cluster_bind_address }}:{{ galera_wsrep_no
 # Defines wsrep node port
 galera_wsrep_node_address_port: 4567
 
+# Define the number of wsrep_slave_threads:
+# - if `auto` we will use "number of vCPUs - 1"
+# - else the value define here is used
+galera_wsrep_slave_threads: 1
+
 # Define the name of the cluster
 galera_cluster_name: "vagrant-test"
 
