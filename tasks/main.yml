@@ -42,6 +42,12 @@
     - install
     - config
 
+- name: "ensure {{ mariadb_systemd_service_name }} is started"
+  service:
+    name: "{{ mariadb_systemd_service_name }}"
+    state: "started"
+  become: true
+
 - import_tasks: mysql_users.yml
   tags:
     - config
