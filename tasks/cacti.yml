@@ -2,7 +2,7 @@
 - name: cacti_monitoring | adding cacti db user for monitoring
   mysql_user:
     host: "{{ cacti_server }}"
-    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "{{ cacti_db_user }}"
     password: "{{ cacti_db_password }}"
     priv: "*.*:SUPER,PROCESS"
@@ -17,7 +17,7 @@
 - name: cacti_monitoring | adding cacti db user for monitoring
   mysql_user:
     host: "{{ cacti_server_fqdn }}"
-    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "{{ cacti_db_user }}"
     password: "{{ cacti_db_password }}"
     priv: "*.*:SUPER,PROCESS"

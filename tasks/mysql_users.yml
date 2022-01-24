@@ -4,7 +4,7 @@
     append_privs: "{{ item.0.append_privs | default('no') }}"
     encrypted: "{{ item.0.encrypted | default('no') }}"
     host: "{{ item.1 }}"
-    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "{{ item.0.name }}"
     password: "{{ item.0.password | default(omit) }}"
     plugin: "{{ item.0.plugin | default(omit) }}"
