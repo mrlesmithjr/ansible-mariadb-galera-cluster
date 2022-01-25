@@ -13,7 +13,7 @@
 - name: configure_root_access | updating root passwords
   mysql_user:
     host: "{{ item }}"
-    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "root"
     password: "{{ mariadb_mysql_root_password }}"
   become: true
@@ -32,7 +32,7 @@
 - name: configure_root_access | updating root passwords (allow from anywhere)
   mysql_user:
     host: "{{ item }}"
-    login_unix_socket: "{{ mariadb_login_unix_socket }}"
+    login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "root"
     password: "{{ mariadb_mysql_root_password }}"
     priv: "*.*:ALL,GRANT"
