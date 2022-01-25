@@ -18,6 +18,9 @@ repos:
     rev: v5.2.1
     hooks:
       - id: ansible-lint
+        additional_dependencies:
+          - rich>=9.5.1,<11.0.0
+          - ansible>=2.9
   - repo: https://github.com/psf/black
     rev: 21.10b0
     hooks:
