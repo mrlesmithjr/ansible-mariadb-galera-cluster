@@ -42,11 +42,13 @@
     - install
     - config
 
-- name: "ensure {{ mariadb_systemd_service_name }} is started"
+# ensure the first node is running in order to add users
+- name: "ensure {{ mariadb_systemd_service_name }} is started on first node"
   service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true
+  when: inventory_hostname == galera_mysql_first_node
 
 - import_tasks: mysql_users.yml
   tags:
