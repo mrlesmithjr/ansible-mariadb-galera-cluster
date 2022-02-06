@@ -12,7 +12,7 @@ lint: |
   flake8
 platforms:
   - name: node1
-    image: jrei/systemd-centos:8
+    image: mrlesmithjr/centos:8
     privileged: true
     command: /usr/sbin/init
     volumes:
