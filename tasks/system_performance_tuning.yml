@@ -1,15 +1,15 @@
 ---
-- include: max-open-files.yml
+- include_tasks: max-open-files.yml
   when: >
     ansible_service_mgr == "systemd" and
     mariadb_max_open_files != 0
 
-- include: oom-score-adjust.yml
+- include_tasks: oom-score-adjust.yml
   when: >
     ansible_service_mgr == "systemd" and
     mariadb_oom_score_adjust != 0
 
-- include: timeout-start-sec.yml
+- include_tasks: timeout-start-sec.yml
   when: >
     ansible_service_mgr == "systemd" and
     mariadb_timeout_start_sec != 0
