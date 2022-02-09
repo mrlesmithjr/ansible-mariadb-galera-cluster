@@ -46,3 +46,16 @@
   when: galera_allow_root_from_any|bool
   tags:
     - updating_root_passwords
+
+- name: configure_root_access | update root my.cnf
+  template:
+    src: "root/my.cnf.j2"
+    dest: "/root/.my.cnf"
+    owner: "root"
+    group: "root"
+    mode: "u=rw,g=,o="
+    backup: yes
+  become: true
+  no_log: true
+  when: ansible_os_family == "RedHat"
+  tags: [ never, updating_root_passwords ]
