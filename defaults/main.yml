@@ -117,8 +117,7 @@ galera_cluster_name: "vagrant-test"
 galera_cluster_nodes_group: "galera-cluster-nodes"
 
 # https://mariadb.com/kb/en/mariadb/wsrep_provider_options/
-galera_extra_wsrep_provider_options:
-  []
+galera_extra_wsrep_provider_options: []
   # evs.auto_evict: 1
   # evs.delayed_margin: 'PT5S'
   # evs.delayed_keep_period: 'PT45S'
@@ -160,15 +159,9 @@ galera_sst_tls_enabled: false
 # https://mariadb.com/kb/en/authentication-plugin-unix-socket.
 # If you need to use password auth change set mariadb_sst_user.plugin to mysql_native_password
 # and set mariadb_sst_password.
+mariadb_sst_user_plugin: "unix_socket"
 mariadb_sst_username: "mysql"
 mariadb_sst_password: ""
-mariadb_sst_user:
-  - name: "{{ mariadb_sst_username }}"
-    hosts:
-      - "localhost"
-    plugin: "unix_socket"
-    password: "{{ mariadb_sst_password }}"
-    priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
 
 # This option defines the wsrep_sst_method that should be used by the cluster.
 # Possible options:
