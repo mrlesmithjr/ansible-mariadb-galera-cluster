@@ -15,7 +15,7 @@
   assert:
     that:
       - mariadb_sst_user_plugin == "unix_socket"
-      - mariadb_sst_password != ""
+      - mariadb_sst_password | length != 0
     fail_msg: >-
       When the mariadb_sst_user_plugin is set to unix_socket
       the mariadb_sst_password should not be set because it is ignored.
@@ -27,7 +27,7 @@
   assert:
     that:
       - mariadb_sst_user_plugin == "mysql_native_password"
-      - mariadb_sst_password == ""
+      - mariadb_sst_password | length == 0
     fail_msg: >-
       When the mariadb_sst_user_plugin is set to mysql_native_password
       the mariadb_sst_password should also be set.

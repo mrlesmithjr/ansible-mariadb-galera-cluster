@@ -14,6 +14,8 @@
           The plugin for mariadb_sst_username was
           set to unix_socket but the user does not exist.
       when: mariadb_sst_username__found.failed
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
   when: mariadb_sst_user_plugin == "unix_socket"
 
 - name: Create definition for mariadb_sst_user via unix_socket
@@ -23,6 +25,8 @@
         hosts: "localhost"
         plugin: "{{ mariadb_sst_user_plugin }}"
         priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
   when: mariadb_sst_user_plugin == "unix_socket"
 
 - name: Create definition for mariadb_sst_user via mysql_native_password
@@ -32,6 +36,8 @@
         hosts: "localhost"
         password: "{{ mariadb_sst_password }}"
         priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
   when: mariadb_sst_user_plugin == "mysql_native_password"
 
 - name: mysql_users | create MySQL users
