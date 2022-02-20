@@ -22,7 +22,8 @@
   set_fact:
     mariadb_sst_user:
       - name: "{{ mariadb_sst_username }}"
-        hosts: "localhost"
+        hosts:
+          - 'localhost'
         plugin: "{{ mariadb_sst_user_plugin }}"
         priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
   delegate_to: "{{ galera_mysql_first_node }}"
@@ -33,7 +34,8 @@
   set_fact:
     mariadb_sst_user:
       - name: "{{ mariadb_sst_username }}"
-        hosts: "localhost"
+        hosts:
+          - 'localhost'
         password: "{{ mariadb_sst_password }}"
         priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
   delegate_to: "{{ galera_mysql_first_node }}"
