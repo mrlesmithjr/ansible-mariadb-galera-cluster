@@ -14,11 +14,11 @@
 - name: When mariadb_sst_username is unix_socket, the mariadb_sst_password should not be set
   assert:
     that:
-      - mariadb_sst_user_plugin == "unix_socket"
       - mariadb_sst_password == ""
     fail_msg: >-
       When the mariadb_sst_user_plugin is set to unix_socket
       the mariadb_sst_password should not be set because it is ignored.
+  when: mariadb_sst_user_plugin == "unix_socket"
   tags:
     - install
     - config
@@ -26,11 +26,11 @@
 - name: When mariadb_sst_username is mysql_native_password, mariadb_sst_password should also be set
   assert:
     that:
-      - mariadb_sst_user_plugin == "mysql_native_password"
       - mariadb_sst_password != ""
     fail_msg: >-
       When the mariadb_sst_user_plugin is set to mysql_native_password
       the mariadb_sst_password should also be set.
+  when: mariadb_sst_user_plugin == "mysql_native_password"
   tags:
     - install
     - config
