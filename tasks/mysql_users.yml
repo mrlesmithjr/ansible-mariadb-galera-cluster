@@ -1,4 +1,47 @@
 ---
+
+- name: "Check if {{ mariadb_sst_username }} exists in the system"
+  block:
+    - name: "Check if {{ mariadb_sst_username }} exists in the system"
+      getent:
+        database: passwd
+        key: "{{ mariadb_sst_username }}"
+      ignore_errors: true
+      register: mariadb_sst_username__found
+    - name: Fail if the above user does not exist
+      fail:
+        msg: >-
+          The plugin for mariadb_sst_username was
+          set to unix_socket but the user does not exist.
+      when: mariadb_sst_username__found.failed
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
+  when: mariadb_sst_user_plugin == "unix_socket"
+
+- name: Create definition for mariadb_sst_user via unix_socket
+  set_fact:
+    mariadb_sst_user:
+      - name: "{{ mariadb_sst_username }}"
+        hosts:
+          - 'localhost'
+        plugin: "{{ mariadb_sst_user_plugin }}"
+        priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
+  when: mariadb_sst_user_plugin == "unix_socket"
+
+- name: Create definition for mariadb_sst_user via mysql_native_password
+  set_fact:
+    mariadb_sst_user:
+      - name: "{{ mariadb_sst_username }}"
+        hosts:
+          - 'localhost'
+        password: "{{ mariadb_sst_password }}"
+        priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
+  delegate_to: "{{ galera_mysql_first_node }}"
+  run_once: true
+  when: mariadb_sst_user_plugin == "mysql_native_password"
+
 - name: mysql_users | create MySQL users
   mysql_user:
     append_privs: "{{ item.0.append_privs | default('no') }}"
