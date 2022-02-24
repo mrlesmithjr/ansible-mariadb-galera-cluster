@@ -73,10 +73,3 @@
     name: "mariadb"
     enabled: true
   become: true
-
-- name: redhat | start only the first node to add users
-  service:
-    name: "mariadb"
-    state: started
-  become: true
-  when: inventory_hostname == galera_mysql_first_node
