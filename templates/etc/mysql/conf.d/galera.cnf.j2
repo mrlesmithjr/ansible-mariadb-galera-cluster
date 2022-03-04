@@ -34,8 +34,8 @@ wsrep_sst_auth="{{ mariadb_sst_username }}:{{ mariadb_sst_password }}"
 wsrep_notify_cmd='{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}'
 {% endif %}
 
-{% if galera_use_gmcast_segment and (hostvars[node]['galera_gmcast_segment'] is defined) %}
-wsrep_provider_options="gmcast.segment={{ hostvars[node]['galera_gmcast_segment'] | int }}"
+{% if galera_use_gmcast_segment and (hostvars[inventory_hostname]['galera_gmcast_segment'] is defined) %}
+wsrep_provider_options="gmcast.segment={{ hostvars[inventory_hostname]['galera_gmcast_segment'] | int }}"
 {% endif %}
 wsrep_provider_options="ist.recv_addr={{ galera_ist_recv_addr }}:{{ galera_ist_recv_addr_port }}"
 wsrep_provider_options="ist.recv_bind={{ galera_ist_recv_bind }}"
