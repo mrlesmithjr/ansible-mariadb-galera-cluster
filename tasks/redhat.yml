@@ -9,7 +9,7 @@
     gpgcheck: true
   become: true
   register: "repo_added"
-  when: 
+  when:
     - galera_enable_mariadb_repo | bool
 
 # fix for conflicting package from appstream
@@ -19,8 +19,8 @@
     warn: false
   changed_when: false
   become: true
-  when: 
-    - ansible_distribution_major_version is version('8', '>=') 
+  when:
+    - ansible_distribution_major_version is version('8', '>=')
     - galera_enable_mariadb_repo | bool
 
 - name: redhat | clean dnf metadata (centos8 & fedora)
@@ -32,7 +32,7 @@
     - repo_added.changed
     - ansible_distribution_major_version is version('8', '>=')
     - galera_enable_mariadb_repo | bool
-    
+
 - name: redhat | installing pre-reqs
   yum:
     name: "{{ mariadb_pre_req_packages }}"
