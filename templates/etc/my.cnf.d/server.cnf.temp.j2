@@ -56,15 +56,6 @@ wsrep_cluster_name="{{ galera_cluster_name }}"
 # To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
 wsrep_cluster_address="gcomm://"
 
-{% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_wsrep_tls_enabled %}
-# WSREP TLS encryption settings
-wsrep_provider_options="socket.ssl_cert={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_cert.name }};socket.ssl_key={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.server_key.name }};socket.ssl_ca={{ mariadb_certificates_dir }}/{{ mariadb_tls_files.ca_cert.name }}"
-{% endif %}
-
-{% if galera_use_gmcast_segment and ('galera_gmcast_segment' in hostvars[inventory_hostname]) %}
-wsrep_provider_options="gmcast.segment={{ hostvars[inventory_hostname]['galera_gmcast_segment'] | int }}"
-{% endif %}
-
 wsrep_sst_method={{ galera_sst_method }}
 {% if galera_sst_method == 'mariabackup' %}
 wsrep_sst_auth="{{ mariadb_sst_username }}:{{ mariadb_sst_password }}"
@@ -81,13 +72,9 @@ wsrep_slave_threads={{ galera_wsrep_slave_threads }}
 wsrep_notify_cmd='{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}'
 {% endif %}
 
-wsrep_provider_options="ist.recv_addr={{ galera_ist_recv_addr }}:{{ galera_ist_recv_addr_port }}"
-wsrep_provider_options="ist.recv_bind={{ galera_ist_recv_bind }}"
 wsrep_node_address="{{ galera_wsrep_node_address }}"
 
-{% if galera_extra_wsrep_provider_options is defined %}
 wsrep_provider_options = "{% for item in galera_extra_wsrep_provider_options %}{% set _key = item.split(': ')[0] %}{% set _val = galera_extra_wsrep_provider_options[_key] %}{{ _key }} = {{ _val }}{% if not loop.last %}; {% endif %}{% endfor %}"
-{% endif %}
 
 [sst]
 {% if mariadb_tls_files and mariadb_tls_files|length == 3 and galera_sst_tls_enabled  %}

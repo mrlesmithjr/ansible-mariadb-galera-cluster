@@ -117,7 +117,7 @@ galera_cluster_name: "vagrant-test"
 galera_cluster_nodes_group: "galera-cluster-nodes"
 
 # https://mariadb.com/kb/en/mariadb/wsrep_provider_options/
-galera_extra_wsrep_provider_options: []
+galera_extra_wsrep_provider_options: {}
   # evs.auto_evict: 1
   # evs.delayed_margin: 'PT5S'
   # evs.delayed_keep_period: 'PT45S'

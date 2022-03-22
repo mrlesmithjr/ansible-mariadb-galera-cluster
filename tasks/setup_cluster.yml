@@ -40,6 +40,42 @@
     - mariadb_tls_files is defined
     - mariadb_tls_files | length == 3
 
+- name: Merge all wsrep_provider_options to be templated later
+  block:
+    - name: WSREP ist.recv_
+      set_fact:
+        galera_extra_wsrep_provider_options: >
+          {{
+            galera_extra_wsrep_provider_options | combine({
+              'ist.recv_addr': galera_ist_recv_addr + ":" + galera_ist_recv_addr_port,
+              'ist.recv_bind': galera_ist_recv_bind
+              })
+          }}
+    - name: WSREP TLS encryption settings
+      set_fact:
+        galera_extra_wsrep_provider_options: >
+          {{
+            galera_extra_wsrep_provider_options | combine({
+              'socket.ssl_cert': mariadb_certificates_dir + "/" + mariadb_tls_files.server_cert.name,
+              'socket.ssl_key': mariadb_certificates_dir + "/" + mariadb_tls_files.server_key.name,
+              'socket.ssl_ca': mariadb_certificates_dir + "/" + mariadb_tls_files.ca_cert.name
+              })
+          }}
+      when:
+        - mariadb_tls_files
+        - mariadb_tls_files|length == 3
+        - galera_wsrep_tls_enabled
+    - name: Add galera_use_gmcast_segment if present
+      set_fact:
+        galera_extra_wsrep_provider_options: "{{ galera_extra_wsrep_provider_options | combine({ 'gmcast.segment': hostvars[inventory_hostname]['galera_gmcast_segment']|int }) }}"
+      when:
+        - galera_use_gmcast_segment
+        - ('galera_gmcast_segment' in hostvars[inventory_hostname])
+    - name: Show all galera_extra_wsrep_provider_options
+      ansible.builtin.debug:
+        var: galera_extra_wsrep_provider_options
+        verbosity: 3
+
 - name: setup_cluster | configuring settings for mariadb and galera
   template:
     src: "{{ item }}.j2"
