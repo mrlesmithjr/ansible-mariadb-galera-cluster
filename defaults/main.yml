@@ -305,6 +305,8 @@ galera_notify_smtp_auth: "False"
 galera_notify_smtp_username: ""
 galera_notify_smtp_password: ""
 galera_notify_smtp_port: 25
+# Set to True if you need SMTP over SSL
+galera_notify_smtp_ssl: False
 
 # Defines if cacti monitoring should be enabled for mysql - If used. May remove later.
 galera_enable_cacti_monitoring: false

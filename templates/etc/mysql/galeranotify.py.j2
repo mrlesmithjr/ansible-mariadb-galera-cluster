@@ -36,7 +36,7 @@ SMTP_SERVER = '{{ galera_notify_smtp_server }}'
 SMTP_PORT = {{ galera_notify_smtp_port }}
 
 # Set to True if you need SMTP over SSL
-SMTP_SSL = {{ galera_notify_smtp_ssl | default('False') }}
+SMTP_SSL = {{ galera_notify_smtp_ssl }}
 
 # Set to True if you need to authenticate to your SMTP server
 SMTP_AUTH = {{ galera_notify_smtp_auth }}
