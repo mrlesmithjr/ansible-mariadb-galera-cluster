@@ -44,11 +44,6 @@
   become: true
   when: inventory_hostname == galera_mysql_first_node
 
-- import_tasks: mysql_users.yml
-  tags:
-    - config
-    - mysql_users
-
 - import_tasks: setup_cluster.yml
   tags:
     - config
@@ -61,6 +56,11 @@
   tags:
     - mysql_databases
   when: mariadb_databases | count > 0
+
+- import_tasks: mysql_users.yml
+  tags:
+    - config
+    - mysql_users
 
 - import_tasks: galera_monitoring.yml
   tags:
