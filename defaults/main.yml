@@ -307,6 +307,8 @@ galera_notify_smtp_password: ""
 galera_notify_smtp_port: 25
 # Set to True if you need SMTP over SSL
 galera_notify_smtp_ssl: False
+# Set to True if you need SMTP over STARTTLS
+galera_notify_smtp_starttls: False
 
 # Defines if cacti monitoring should be enabled for mysql - If used. May remove later.
 galera_enable_cacti_monitoring: false
