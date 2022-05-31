@@ -121,7 +121,7 @@ def send_notification(from_email, to_email, subject, date, message, smtp_server,
 
     if(use_starttls):
         mailer.starttls()
-        
+
     if(use_auth):
         mailer.login(smtp_user, smtp_pass)
 
