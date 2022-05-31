@@ -39,7 +39,7 @@ SMTP_PORT = {{ galera_notify_smtp_port }}
 SMTP_SSL = {{ galera_notify_smtp_ssl }}
 
 # Set to True if you need SMTP over TLS
-SMTP_TLS = {{ galera_notify_smtp_tls }}
+SMTP_STARTTLS = {{ galera_notify_smtp_starttls }}
 
 # Set to True if you need to authenticate to your SMTP server
 SMTP_AUTH = {{ galera_notify_smtp_auth }}
@@ -93,7 +93,7 @@ def main(argv):
                 message_obj.set_index(arg)
         try:
             send_notification(MAIL_FROM, MAIL_TO, 'Galera Notification: ' + THIS_SERVER, DATE,
-                              str(message_obj), SMTP_SERVER, SMTP_PORT, SMTP_SSL, SMTP_TLS, SMTP_AUTH,
+                              str(message_obj), SMTP_SERVER, SMTP_PORT, SMTP_SSL, SMTP_STARTTLS, SMTP_AUTH,
                               SMTP_USERNAME, SMTP_PASSWORD)
         except Exception, e:
             print "Unable to send notification: %s" % e
@@ -105,7 +105,7 @@ def main(argv):
     sys.exit(0)
 
 def send_notification(from_email, to_email, subject, date, message, smtp_server,
-                      smtp_port, use_ssl, use_tls, use_auth, smtp_user, smtp_pass):
+                      smtp_port, use_ssl, use_starttls, use_auth, smtp_user, smtp_pass):
     msg = MIMEText(message)
 
     msg['From'] = from_email
@@ -119,7 +119,7 @@ def send_notification(from_email, to_email, subject, date, message, smtp_server,
     else:
         mailer = smtplib.SMTP(smtp_server, smtp_port)
 
-    if(use_tls):
+    if(use_starttls):
         mailer.starttls()
         
     if(use_auth):
