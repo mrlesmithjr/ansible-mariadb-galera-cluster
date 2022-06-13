@@ -70,3 +70,8 @@ ubuntu2004:
   stage: molecule-test
   script:
     - molecule test --scenario-name ubuntu2004
+
+ubuntu2204:
+  stage: molecule-test
+  script:
+    - molecule test --scenario-name ubuntu2204

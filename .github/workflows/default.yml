@@ -30,6 +30,7 @@ jobs:
           # - ubuntu1604
           - ubuntu1804
           # - ubuntu2004
+          - ubuntu2204
         python-version: [3.8]
 
     steps:
