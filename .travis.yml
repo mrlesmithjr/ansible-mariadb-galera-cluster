@@ -16,6 +16,7 @@ env:
   - molecule_distro=ubuntu1604
   - molecule_distro=ubuntu1804
   - molecule_distro=ubuntu2004
+  - molecule_distro=ubuntu2204
 install:
   - pip3 install --upgrade pip pip-tools
   - pip-sync requirements.txt requirements-dev.txt
