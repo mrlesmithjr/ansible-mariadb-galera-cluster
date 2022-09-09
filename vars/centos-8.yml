@@ -2,6 +2,7 @@
 mariadb_login_unix_socket: "/var/lib/mysql/mysql.sock"
 mariadb_pre_req_packages:
   - "epel-release"
+  - "procps-ng"
 mariadb_packages:
   - "python3-mysql"
   - "MariaDB-server"
