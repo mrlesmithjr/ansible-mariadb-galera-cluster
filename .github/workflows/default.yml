@@ -22,6 +22,7 @@ jobs:
           - centos7
           - centos8
           - rocky8
+          - rocky9
           # - debian8
           - debian9
           - debian10
