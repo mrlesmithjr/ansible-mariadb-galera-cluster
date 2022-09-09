@@ -36,6 +36,11 @@ rocky8:
   script:
     - molecule test --scenario-name rocky8
 
+rocky9:
+  stage: molecule-test
+  script:
+    - molecule test --scenario-name rocky9
+
 debian9:
   stage: molecule-test
   script:
