@@ -1,0 +1,43 @@
+---
+- name: manage_node_state | make node systemd service {{ mariadb_systemd_service_state }}
+  service: # noqa 503
+    name: "{{ mariadb_systemd_service_name }}"
+    state: "{{ mariadb_systemd_service_state }}"
+  become: true
+  when: inventory_hostname == item
+
+- name: manage_node_state | ensure node is fully stopped before continuing
+  service: # noqa 503
+    name: "{{ mariadb_systemd_service_name }}"
+    state: "stopped"
+  become: true
+  register: "_mariadb_galera_cluster_node"
+  until: _mariadb_galera_cluster_node.status.ActiveState == "inactive"
+  retries: 60
+  delay: 5
+  when:
+    - '"stopped" in mariadb_systemd_service_state'
+    - inventory_hostname == item
+
+- name: manage_node_state | ensure node is fully started before continuing
+  service: # noqa 503
+    name: "{{ mariadb_systemd_service_name }}"
+    state: "started"
+  become: true
+  register: "_mariadb_galera_cluster_node"
+  until: _mariadb_galera_cluster_node.status.ActiveState == "active"
+  retries: 60
+  delay: 5
+  when:
+    - '"started" in mariadb_systemd_service_state'
+    - inventory_hostname == item
+
+- name: manage_node_state | sleep for extra 15 seconds to wait for node state stabilization
+  wait_for:
+    timeout: 15
+  check_mode: false
+  delegate_to: localhost
+  become: false
+  when:
+    - '"started" in mariadb_systemd_service_state'
+    - inventory_hostname == item
