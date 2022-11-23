@@ -16,7 +16,6 @@
 - name: redhat | disable appstream mysql/mariadb modules
   command:
     cmd: "dnf -y module disable mysql mariadb"
-    warn: false
   changed_when: false
   become: true
   when:
@@ -25,9 +24,8 @@
 
 - name: redhat | clean dnf metadata (centos8 & fedora)
   shell: "dnf clean all && rm -r /var/cache/dnf" # noqa 503
+  changed_when: false
   become: true
-  args:
-    warn: false
   when:
     - repo_added.changed
     - ansible_distribution_major_version is version('8', '>=')
