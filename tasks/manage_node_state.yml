@@ -6,6 +6,15 @@
   become: true
   when: inventory_hostname == item
 
+- name: manage_node_state | reset failed status (otherwise service can't be stopped)
+  command: "systemctl reset-failed {{ mariadb_systemd_service_name }}" # noqa command-instead-of-module
+  become: true
+  check_mode: false
+  changed_when: false
+  when:
+    - '"stopped" in mariadb_systemd_service_state'
+    - inventory_hostname == item
+
 - name: manage_node_state | ensure node is fully stopped before continuing
   service: # noqa 503
     name: "{{ mariadb_systemd_service_name }}"
