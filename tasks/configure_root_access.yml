@@ -15,8 +15,6 @@
     - "127.0.0.1"
     - "::1"
     - "localhost"
-  tags:
-    - updating_root_passwords
 
 - name: configure_root_access | configuring root my.cnf
   template:
@@ -43,5 +41,3 @@
   with_items:
     - "%"
   when: galera_allow_root_from_any|bool
-  tags:
-    - updating_root_passwords
