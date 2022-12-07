@@ -7,6 +7,7 @@ authors = ["Larry Smith Jr. <mrlesmithjr@gmail.com>"]
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 ansible = "6.6.0"
+netaddr = "^0.8.0"
 
 [tool.poetry.group.dev.dependencies]
 ansible-lint = "6.8.7"
