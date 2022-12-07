@@ -23,6 +23,7 @@
   delay: 5
   with_items:
     - "{{ ansible_hostname }}"
+    - "{{ galera_cluster_bind_address }}"
     - "127.0.0.1"
     - "::1"
     - "localhost"
