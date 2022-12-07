@@ -16,6 +16,7 @@
     login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "root"
     password: "{{ mariadb_mysql_root_password }}"
+    priv: "*.*:ALL,GRANT"
   become: true
   no_log: true
   run_once: true
