@@ -81,6 +81,7 @@
     src: "{{ item }}.j2"
     dest: "/{{ item }}"
     mode: "0644"
+	follow: true
   become: true
   register: "_mariadb_galera_cluster_reconfigured"
   loop: "{{ mariadb_confs }}"
