@@ -1,0 +1,9 @@
+---
+- name: Side effects
+  hosts: all
+  vars:
+    mariadb_mysql_root_password: 'password'
+  tasks:
+    - name: Include ansible-mariadb-galera-cluster
+      include_role:
+        name: ansible-mariadb-galera-cluster

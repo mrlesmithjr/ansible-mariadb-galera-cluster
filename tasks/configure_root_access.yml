@@ -1,15 +1,4 @@
 ---
-- name: configure_root_access | configuring root my.cnf
-  template:
-    src: "root/my.cnf.j2"
-    dest: "/root/.my.cnf"
-    owner: "root"
-    group: "root"
-    mode: "u=rw,g=,o="
-  become: true
-  no_log: true
-  when: ansible_os_family == "RedHat"
-
 - name: configure_root_access | updating root passwords
   mysql_user:
     host: "{{ item }}"
@@ -26,8 +15,16 @@
     - "127.0.0.1"
     - "::1"
     - "localhost"
-  tags:
-    - updating_root_passwords
+
+- name: configure_root_access | configuring root my.cnf
+  template:
+    src: "root/my.cnf.j2"
+    dest: "/root/.my.cnf"
+    owner: "root"
+    group: "root"
+    mode: "u=rw,g=,o="
+  become: true
+  no_log: true
 
 - name: configure_root_access | updating root passwords (allow from anywhere)
   mysql_user:
@@ -44,5 +41,3 @@
   with_items:
     - "%"
   when: galera_allow_root_from_any|bool
-  tags:
-    - updating_root_passwords
