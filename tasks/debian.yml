@@ -50,7 +50,6 @@
     recurse: true
   become: true
   changed_when: false
-  when: mariadb_config_overrides is defined
 
 - name: debian | add an overrides file
   template:
