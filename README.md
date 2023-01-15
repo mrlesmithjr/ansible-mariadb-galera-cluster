@@ -26,7 +26,8 @@ An [Ansible](https://www.ansible.com) role to install/configure a [MariaDB-Galer
 
 ## Requirements
 
-None
+- Collections:
+  - community.mysql
 
 ## Role Variables
 
