@@ -47,7 +47,6 @@
     path: "/etc/mysql/conf.d"
     state: "directory"
     mode: 0755
-    recurse: true
   become: true
   changed_when: false
   when: mariadb_config_overrides is defined
