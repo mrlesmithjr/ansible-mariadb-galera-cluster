@@ -44,7 +44,6 @@
     state: "directory"
     mode: 0755
   become: true
-  changed_when: false
   when: mariadb_config_overrides is defined
 
 - name: redhat | add an overrides file
