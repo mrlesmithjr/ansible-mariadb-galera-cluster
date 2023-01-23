@@ -1,5 +1,5 @@
 ---
-name: Molecule Test
+name: Verification
 on:
   push:
     branches-ignore:
@@ -12,6 +12,7 @@ on:
       - master
 jobs:
   pre-commit:
+    name: pre-commit Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,7 +35,8 @@ jobs:
           pip install pre-commit
       - name: Run pre-commit checks
         uses: pre-commit/action@v3.0.0
-  build:
+  molecule:
+    name: Molecule Test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
