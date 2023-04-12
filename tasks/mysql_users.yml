@@ -43,7 +43,7 @@
   when: mariadb_sst_user_plugin == "mysql_native_password"
 
 - name: mysql_users | create MySQL users
-  mysql_user:
+  community.mysql.mysql_user:
     append_privs: "{{ item.0.append_privs | default('no') }}"
     encrypted: "{{ item.0.encrypted | default('no') }}"
     host: "{{ item.1 }}"
