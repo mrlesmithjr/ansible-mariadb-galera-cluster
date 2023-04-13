@@ -60,7 +60,7 @@
 - import_tasks: mysql_databases.yml
   tags:
     - mysql_databases
-  when: 
+  when:
     - mariadb_databases | count > 0
     - inventory_hostname == galera_mysql_first_node
 
