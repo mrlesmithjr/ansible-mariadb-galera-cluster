@@ -23,7 +23,7 @@
     - galera_enable_mariadb_repo | bool
 
 - name: redhat | clean dnf metadata (centos8 & fedora)
-  shell: "dnf clean all && rm -r /var/cache/dnf" # noqa 503
+  shell: "dnf clean all && rm -r /var/cache/dnf"
   changed_when: false
   become: true
   when:
