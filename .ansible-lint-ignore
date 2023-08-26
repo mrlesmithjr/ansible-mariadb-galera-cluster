@@ -1,0 +1,3 @@
+# This file contains ignores rule violations for ansible-lint
+tasks/configure_root_access.yml ignore-errors
+tasks/setup_cluster.yml no-changed-when
