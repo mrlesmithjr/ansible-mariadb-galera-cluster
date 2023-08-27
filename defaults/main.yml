@@ -274,7 +274,7 @@ mariadb_mysql_users: []
 galera_enable_galera_monitoring_script: false
 
 # Define galera monitoring script path & name
-galera_monitor_script_name: "galeranotify.py"
+galera_monitor_script_name: "galeranotify.py{{ ansible_python.version.major|int }}"
 galera_monitor_script_path: "/etc/mysql"
 
 # Defines the which node should be considered the first in the cluster
