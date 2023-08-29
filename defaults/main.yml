@@ -85,6 +85,11 @@ mariadb_charset_client: "utf8"
 #   mariadb:
 #     max_connections: 2048
 
+# Defines if mariadb is already available on the target hosts
+# It will compare version between ansible and system and exit early if missmatch
+# This prevent unexpected change on role upgrade
+mariadb_upgrade: false
+
 # Galera settings
 
 # Defines if the galera cluster should be reconfigured
