@@ -34,3 +34,40 @@
   tags:
     - install
     - config
+
+- name: Check mariadb_version on target system
+  command: "mariadb -V"
+  check_mode: false
+  register: mariadb_version_check
+  failed_when: '"mariadb" not in mariadb_version_check.stdout and mariadb_version_check.rc == 0'
+  changed_when: not 'mariadb_version_check.rc == 0'
+  when: not mariadb_upgrade|bool
+  tags:
+    - install
+    - config
+
+- name: Extract MariaDB version
+  set_fact:
+    mariadb_version_checked: "{{ mariadb_version_check.stdout.split(' ')[5] }}"
+  check_mode: false
+  when: not mariadb_upgrade|bool and mariadb_version_check.rc == 0
+  tags:
+    - install
+    - config
+
+- name:
+  debug:
+    msg: "Installed {{ mariadb_version_checked }} - mariadb_version: {{ mariadb_version }}"
+  when: not mariadb_upgrade|bool and mariadb_version_check.rc == 0
+
+- name: Verify the expected mariadb_version
+  assert:
+    that: 'mariadb_version_checked.startswith("{{ mariadb_version }}")'
+    fail_msg: >-
+      The mariadb_version "{{ mariadb_version }}" doesn't match the one
+      installed on the system: {{ mariadb_version_checked }}.
+      Use the correct mariadb_version or set mariadb_upgrade: True
+  when: not mariadb_upgrade|bool and mariadb_version_check.rc == 0
+  tags:
+    - install
+    - config

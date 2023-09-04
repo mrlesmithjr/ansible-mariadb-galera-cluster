@@ -4,7 +4,7 @@
 # MariaDB setting
 
 # Define mariadb version
-mariadb_version: "10.6"
+mariadb_version: "10.11"
 
 # Defines if we should enable the MariaDB repo or use version within OS repos.
 galera_enable_mariadb_repo: true
@@ -84,6 +84,11 @@ mariadb_charset_client: "utf8"
 # mariadb_config_overrides:
 #   mariadb:
 #     max_connections: 2048
+
+# Defines if mariadb is already available on the target hosts
+# It will compare version between ansible and system and exit early if missmatch
+# This prevent unexpected change on role upgrade
+mariadb_upgrade: false
 
 # Galera settings
 
