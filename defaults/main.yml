@@ -9,6 +9,9 @@ mariadb_version: "10.11"
 # Defines if we should enable the MariaDB repo or use version within OS repos.
 galera_enable_mariadb_repo: true
 
+# Defines if we should enable the epel repo or use version within OS repos.
+galera_enable_epel_repo: true
+
 # Defines repository settings for apt
 mariadb_debian_repo: "deb [arch=amd64,i386,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/{{ mariadb_version }}/{{ ansible_distribution|lower }} {{ ansible_distribution_release|lower }} main"
 mariadb_debian_repo_keyserver: "keyserver.ubuntu.com"

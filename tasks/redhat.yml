@@ -23,6 +23,7 @@
   become: true
   register: "epel_repo_added"
   when:
+    - galera_enable_epel_repo | bool
     - ansible_distribution_major_version is version('8', '>=')
 
 # fix for conflicting package from appstream
