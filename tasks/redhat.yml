@@ -23,8 +23,7 @@
   become: true
   register: "epel_repo_added"
   when:
-    - galera_enable_epel_repo | bool
-    - ansible_distribution_major_version is version('8', '>=')
+    - epel_redhat_repo is defined and epel_redhat_repo_key is defined and ansible_distribution_major_version is version('8', '>=')
 
 # fix for conflicting package from appstream
 - name: redhat | disable appstream mysql/mariadb modules
