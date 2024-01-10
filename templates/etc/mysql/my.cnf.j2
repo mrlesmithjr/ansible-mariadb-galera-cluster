@@ -18,8 +18,12 @@ max_allowed_packet = {{ mariadb_mysql_settings['max_allowed_packet'] }}
 max_binlog_size = {{ mariadb_mysql_settings['max_binlog_size'] }}
 myisam-recover = BACKUP
 port = {{ mariadb_mysql_port }}
+{% if mariadb_mysql_settings['query_cache_limit'] is defined -%}
 query_cache_limit = {{ mariadb_mysql_settings['query_cache_limit'] }}
+{%- endif %}
+{% if mariadb_mysql_settings['query_cache_size'] is defined -%}
 query_cache_size = {{ mariadb_mysql_settings['query_cache_size'] }}
+{%- endif %}
 skip-external-locking
 socket = {{ mariadb_login_unix_socket }}
 thread_cache_size = {{ mariadb_mysql_settings['thread_cache_size'] }}
