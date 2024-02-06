@@ -48,7 +48,7 @@
 
 - name: Extract MariaDB version
   set_fact:
-    mariadb_version_checked: "{{ mariadb_version_check.stdout.split(' ')[5] }}"
+    mariadb_version_checked: "{{ mariadb_version_check.stdout.split(' ')[2] }}"
   check_mode: false
   when: not mariadb_upgrade|bool and mariadb_version_check.rc == 0
   tags:
