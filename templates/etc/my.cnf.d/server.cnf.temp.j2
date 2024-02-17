@@ -48,7 +48,7 @@ wsrep_provider={{ galera_wsrep_provider }}
 wsrep_cluster_name="{{ galera_cluster_name }}"
 {% set _galera_cluster_node_addresses = [] %}
 {% for node in galera_cluster_nodes %}
-{%   set _ = _galera_cluster_node_addresses.append( hostvars[node]['galera_cluster_bind_address'] | default(hostvars[node]['ansible_' ~ galera_cluster_bind_interface]['ipv4']['address']) | mandatory ) %}
+{%   set _ = _galera_cluster_node_addresses.append( hostvars[node]['galera_cluster_bind_address'] | default(hostvars[node]['ansible_' ~ hostvars[node]['galera_cluster_bind_interface']|default(galera_cluster_bind_interface)]['ipv4']['address']) | mandatory ) %}
 {% endfor %}
 #wsrep_cluster_address="{{ 'gcomm://' ~ _galera_cluster_node_addresses | map('ansible.utils.ipwrap') | list | join(',') }}"
 # To start failed cluster comment out above and uncomment below...Once cluster is started revert changes and restart mysql on main node where change was made
