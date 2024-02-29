@@ -77,14 +77,16 @@
         verbosity: 3
 
 - name: setup_cluster | configuring settings for mariadb and galera
-  template:
-    src: "{{ item }}.j2"
-    dest: "/{{ item }}"
-    mode: "0644"
+  ansible.builtin.template:
+    src: "{{ file.name }}.j2"
+    dest: "/{{ file.name }}"
+    mode: "{{ file.mode |default ('0644') }}"
     follow: true
   become: true
   register: "_mariadb_galera_cluster_reconfigured"
   loop: "{{ mariadb_confs }}"
+  loop_control:
+    loop_var: file
 
 - name: setup_cluster | cluster rolling restart - apply config changes (first node)
   include_tasks: manage_node_state.yml
@@ -162,11 +164,13 @@
     not galera_cluster_configured.stat.exists
 
 - name: setup_cluster | cluster bootstrap - configuring final galera config for first node
-  template:
-    src: "{{ item }}.j2"
-    dest: "/{{ item }}"
-    mode: "0644"
+  ansible.builtin.template:
+    src: "{{ file.name }}.j2"
+    dest: "/{{ file.name }}"
+    mode: "{{ file.mode |default ('0644') }}"
   loop: "{{ mariadb_confs }}"
+  loop_control:
+    loop_var: file
   become: true
   when: >
     not galera_cluster_configured.stat.exists and

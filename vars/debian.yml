@@ -15,9 +15,10 @@ mariabackup_packages:
 mariadb_certificates_dir: "/etc/mysql/certificates"
 mariadb_systemd_service_name: "mysql"
 mariadb_confs:
-  - "etc/mysql/debian.cnf"
-  - "etc/mysql/my.cnf"
-  - "etc/mysql/conf.d/galera.cnf"
+  - name: "etc/mysql/debian.cnf"
+    mode: 0600
+  - name: "etc/mysql/my.cnf"
+  - name: "etc/mysql/conf.d/galera.cnf"
 mariadb_temp_confs:
   - "etc/mysql/conf.d/galera.cnf"
 galera_wsrep_provider: "/usr/lib/galera/libgalera_smm.so"
