@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-mariadb-galera-cluster
 - name: gather os specific variables
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   tags:
     - always
     - install
@@ -11,22 +11,22 @@
     - "{{ ansible_distribution | lower }}.yml"
     - "{{ ansible_os_family | lower }}.yml"
 
-- import_tasks: checks.yml
+- ansible.builtin.import_tasks: checks.yml
   tags:
     - always
     - install
 
-- import_tasks: debian.yml
+- ansible.builtin.import_tasks: debian.yml
   tags:
     - install
   when: ansible_os_family == "Debian"
 
-- import_tasks: redhat.yml
+- ansible.builtin.import_tasks: redhat.yml
   tags:
     - install
   when: ansible_os_family == "RedHat"
 
-- import_tasks: system_performance_tuning.yml
+- ansible.builtin.import_tasks: system_performance_tuning.yml
   tags:
     - config
 
@@ -38,38 +38,38 @@
 
 # ensure the first node is running in order to add users
 - name: "ensure {{ mariadb_systemd_service_name }} is started on first node"
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true
   when: inventory_hostname == galera_mysql_first_node
 
-- import_tasks: mysql_users.yml
+- ansible.builtin.import_tasks: mysql_users.yml
   tags:
     - config
     - mysql_users
 
-- import_tasks: setup_cluster.yml
+- ansible.builtin.import_tasks: setup_cluster.yml
   tags:
     - config
 
-- import_tasks: configure_root_access.yml
+- ansible.builtin.import_tasks: configure_root_access.yml
   tags:
     - config
 
-- import_tasks: mysql_databases.yml
+- ansible.builtin.import_tasks: mysql_databases.yml
   tags:
     - mysql_databases
   when:
     - mariadb_databases | count > 0
     - inventory_hostname == galera_mysql_first_node
 
-- import_tasks: galera_monitoring.yml
+- ansible.builtin.import_tasks: galera_monitoring.yml
   tags:
     - config_galera_monitoring
   when: galera_enable_galera_monitoring_script
 
-- import_tasks: cacti.yml
+- ansible.builtin.import_tasks: cacti.yml
   tags:
     - config_cacti_monitoring
   when: galera_enable_cacti_monitoring
