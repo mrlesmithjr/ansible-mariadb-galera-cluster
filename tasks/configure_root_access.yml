@@ -1,6 +1,6 @@
 ---
 - name: configure_root_access | updating root passwords
-  mysql_user:
+  community.mysql.mysql_user:
     host: "{{ item }}"
     login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "root"
@@ -18,7 +18,7 @@
     - "localhost"
 
 - name: configure_root_access | configuring root my.cnf
-  template:
+  ansible.builtin.template:
     src: "root/my.cnf.j2"
     dest: "/root/.my.cnf"
     owner: "root"
@@ -28,7 +28,7 @@
   no_log: true
 
 - name: configure_root_access | updating root passwords (allow from anywhere)
-  mysql_user:
+  community.mysql.mysql_user:
     host: "{{ item }}"
     login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "root"

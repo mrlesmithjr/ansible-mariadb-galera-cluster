@@ -1,6 +1,6 @@
 ---
 - name: galera_monitoring | configuring monitor script for galera
-  template:
+  ansible.builtin.template:
     src: "etc/mysql/{{ galera_monitor_script_name }}.j2"
     dest: "{{ galera_monitor_script_path }}/{{ galera_monitor_script_name }}"
     owner: "mysql"
@@ -10,7 +10,7 @@
   register: galera_monitoring_updated
 
 - name: galera_monitoring | restarting mysql on first node
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "restarted"
   become: true
@@ -19,7 +19,7 @@
     galera_monitoring_updated.changed
 
 - name: galera_monitoring | waiting for mysql to start on first node
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true
@@ -34,7 +34,7 @@
     galera_monitoring_updated.changed
 
 - name: galera_monitoring | restarting mysql on additional servers
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "restarted"
   become: true
@@ -44,7 +44,7 @@
     galera_monitoring_updated.changed
 
 - name: galera_monitoring | waiting for mysql to start on other nodes
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true

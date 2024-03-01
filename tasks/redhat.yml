@@ -1,6 +1,6 @@
 ---
 - name: redhat | adding mariadb repo
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: "mariadb"
     file: "MariaDB"
     description: "MariaDB"
@@ -14,7 +14,7 @@
 
 # fix for conflicting package from appstream
 - name: redhat | disable appstream mysql/mariadb modules
-  command:
+  ansible.builtin.command:
     cmd: "dnf -y module disable mysql mariadb"
   changed_when: false
   become: true
@@ -32,14 +32,14 @@
     - galera_enable_mariadb_repo | bool
 
 - name: redhat | installing pre-reqs
-  yum:
+  ansible.builtin.yum:
     name: "{{ mariadb_pre_req_packages }}"
     state: "present"
     update_cache: true
   become: true
 
 - name: redhat | precreate /etc/my.cnf.d in case we need to add mariadb_config_overrides file
-  file:
+  ansible.builtin.file:
     path: "/etc/my.cnf.d"
     state: "directory"
     mode: 0755
@@ -47,7 +47,7 @@
   when: mariadb_config_overrides is defined
 
 - name: redhat | add an overrides file
-  template:
+  ansible.builtin.template:
     src: "etc/mariadb_overrides.cnf.j2"
     dest: "/etc/my.cnf.d/overrides.cnf"
     owner: "root"
@@ -57,21 +57,21 @@
   when: mariadb_config_overrides is defined
 
 - name: redhat | installing mariadb mysql
-  yum:
+  ansible.builtin.yum:
     name: "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
     state: "present"
     update_cache: true
   become: true
 
 - name: redhat | remove migrated-from-my.cnf-settings.conf that is causing MariaDB to not start
-  file:
+  ansible.builtin.file:
     path: "/etc/systemd/system/mariadb.service.d/migrated-from-my.cnf-settings.conf"
     state: "absent"
   become: true
   notify: reload systemd daemon
 
 - name: redhat | ensuring mariadb mysql is enabled on boot
-  service:
+  ansible.builtin.service:
     name: "mariadb"
     enabled: true
   become: true

@@ -1,15 +1,15 @@
 ---
-- import_tasks: max-open-files.yml
+- ansible.builtin.import_tasks: max-open-files.yml
   when: >
     ansible_service_mgr == "systemd" and
     mariadb_max_open_files != 0
 
-- import_tasks: oom-score-adjust.yml
+- ansible.builtin.import_tasks: oom-score-adjust.yml
   when: >
     ansible_service_mgr == "systemd" and
     mariadb_oom_score_adjust != 0
 
-- import_tasks: timeout-start-sec.yml
+- ansible.builtin.import_tasks: timeout-start-sec.yml
   when: >
     ansible_service_mgr == "systemd" and
     mariadb_timeout_start_sec != 0
@@ -18,7 +18,7 @@
 # https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/bootstrap.yml
 # Many thanks to Cedric DELGEHIER
 - name: system_perfromance_tuning | configure swappiness
-  sysctl:
+  ansible.posix.sysctl:
     name: "vm.swappiness"
     value: "{{ mariadb_swappiness }}"
     state: "present"

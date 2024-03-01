@@ -1,6 +1,6 @@
 ---
 - name: cacti_monitoring | adding cacti db user for monitoring
-  mysql_user:
+  community.mysql.mysql_user:
     host: "{{ cacti_server }}"
     login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "{{ cacti_db_user }}"
@@ -15,7 +15,7 @@
     cacti_server is defined
 
 - name: cacti_monitoring | adding cacti db user for monitoring
-  mysql_user:
+  community.mysql.mysql_user:
     host: "{{ cacti_server_fqdn }}"
     login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
     name: "{{ cacti_db_user }}"
