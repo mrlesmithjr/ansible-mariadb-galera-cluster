@@ -12,7 +12,7 @@ This project and everyone participating in it is governed by the [ansible-mariad
 
 ## Environment Setup
 ```
-python3.9 -m venv .venv
+python3.10 -m venv .venv
 source .venv/bin/activate
 
 # Install Requirements
