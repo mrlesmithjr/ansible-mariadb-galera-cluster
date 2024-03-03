@@ -5,8 +5,8 @@ description = ""
 authors = ["Larry Smith Jr. <mrlesmithjr@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
-ansible = "6.6.0"
+python = ">=3.10,<4.0"
+ansible = "9.1.0"
 netaddr = "^0.8.0"
 
 [tool.poetry.group.dev.dependencies]
