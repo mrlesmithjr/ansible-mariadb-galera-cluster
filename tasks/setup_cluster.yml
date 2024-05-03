@@ -1,20 +1,20 @@
 ---
 # Mark cluster node unconfigured when setting need cluster shutdown
 - name: setup_cluster | mark galera cluster node unconfigured
-  file:
+  ansible.builtin.file:
     path: "/etc/galera_cluster_configured"
     state: "absent"
   become: true
   when: galera_reconfigure_galera
 
 - name: setup_cluster | checking if galera cluster already configured
-  stat:
+  ansible.builtin.stat:
     path: "/etc/galera_cluster_configured"
   register: "galera_cluster_configured"
 
 # Configure common settings for mariadb and galera
 - name: setup_cluster | create TLS certificates directory
-  file:
+  ansible.builtin.file:
     path: "{{ mariadb_certificates_dir }}"
     state: "directory"
     owner: "mysql"
@@ -26,7 +26,7 @@
     - mariadb_tls_files | length == 3
 
 - name: setup_cluster | copy TLS CA cert, server cert & private key
-  copy:
+  ansible.builtin.copy:
     content: "{{ item.value.content }}"
     dest: "{{ mariadb_certificates_dir }}/{{ item.value.name }}"
     owner: "mysql"
@@ -36,6 +36,7 @@
   with_dict: "{{ mariadb_tls_files }}"
   become: true
   no_log: true
+  register: _mariadb_galera_cluster_newcerts
   when:
     - mariadb_tls_files is defined
     - mariadb_tls_files | length == 3
@@ -89,26 +90,28 @@
     loop_var: file
 
 - name: setup_cluster | cluster rolling restart - apply config changes (first node)
-  include_tasks: manage_node_state.yml
+  ansible.builtin.include_tasks: manage_node_state.yml
   vars:
     mariadb_systemd_service_state: "restarted"
   with_items: "{{ galera_mysql_first_node }}"
   when: >
     galera_cluster_configured.stat.exists and
-    _mariadb_galera_cluster_reconfigured.changed
+    (_mariadb_galera_cluster_reconfigured.changed or
+    _mariadb_galera_cluster_newcerts.changed)
 
 - name: setup_cluster | cluster rolling restart - apply config changes (other nodes)
-  include_tasks: manage_node_state.yml
+  ansible.builtin.include_tasks: manage_node_state.yml
   vars:
     mariadb_systemd_service_state: "restarted"
   with_items: "{{ ansible_play_hosts | difference(galera_mysql_first_node) }}"
   when: >
     galera_cluster_configured.stat.exists and
-    _mariadb_galera_cluster_reconfigured.changed
+    (_mariadb_galera_cluster_reconfigured.changed or
+    _mariadb_galera_cluster_newcerts.changed)
 
 # Offline (re)configuration of glaera cluster settings - cluster bootstrap
 - name: setup_cluster | cluster bootstrap - stopping mysql to (re)configure cluster (other nodes)
-  include_tasks: manage_node_state.yml
+  ansible.builtin.include_tasks: manage_node_state.yml
   vars:
     mariadb_systemd_service_state: "stopped"
   with_items: "{{ ansible_play_hosts | difference(galera_mysql_first_node) }}"
@@ -116,7 +119,7 @@
     not galera_cluster_configured.stat.exists
 
 - name: setup_cluster | cluster bootstrap - stopping mysql to (re)configure cluster (first node)
-  include_tasks: manage_node_state.yml
+  ansible.builtin.include_tasks: manage_node_state.yml
   vars:
     mariadb_systemd_service_state: "stopped"
   with_items: "{{ galera_mysql_first_node }}"
@@ -124,13 +127,13 @@
     not galera_cluster_configured.stat.exists
 
 - name: setup_cluster | custer bootstrap - killing lingering mysql processes to ensure mysql is stopped
-  command: "pkill {{ mariadb_systemd_service_name }}"  # noqa ignore-errors
+  ansible.builtin.command: "pkill {{ mariadb_systemd_service_name }}" # noqa ignore-errors
   become: true
   ignore_errors: true
   when: not galera_cluster_configured.stat.exists
 
 - name: setup_cluster | cluster bootstrap - configuring temp galera config for first node
-  template:
+  ansible.builtin.template:
     src: "{{ item }}.temp.j2"
     dest: "/{{ item }}"
     mode: "0644"
@@ -141,14 +144,14 @@
     inventory_hostname == galera_mysql_first_node
 
 - name: setup_cluster | cluster bootstrap - bootstrapping first node
-  command: "/usr/bin/galera_new_cluster"
+  ansible.builtin.command: "/usr/bin/galera_new_cluster"
   become: true
   when: >
     not galera_cluster_configured.stat.exists and
     inventory_hostname == galera_mysql_first_node
 
 - name: setup_cluster | cluster bootstrap - ensure first node is fully started before joining other nodes
-  include_tasks: manage_node_state.yml
+  ansible.builtin.include_tasks: manage_node_state.yml
   vars:
     mariadb_systemd_service_state: "started"
   with_items: "{{ galera_mysql_first_node }}"
@@ -185,7 +188,7 @@
     not galera_cluster_configured.stat.exists
 
 - name: setup_cluster | cluster bootstrap - marking node as configured for galera cluster
-  file:
+  ansible.builtin.file:
     path: "/etc/galera_cluster_configured"
     state: "touch"
     mode: "0644"

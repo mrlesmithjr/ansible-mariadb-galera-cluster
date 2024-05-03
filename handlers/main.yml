@@ -1,6 +1,6 @@
 ---
 # handlers file for ansible-mariadb-galera-cluster
 - name: "reload systemd daemon"
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
   become: true

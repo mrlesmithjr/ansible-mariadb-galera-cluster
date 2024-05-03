@@ -3,13 +3,13 @@
 - name: "Check if {{ mariadb_sst_username }} exists in the system"
   block:
     - name: "Check if {{ mariadb_sst_username }} exists in the system"
-      getent:
+      ansible.builtin.getent:
         database: passwd
         key: "{{ mariadb_sst_username }}"
       ignore_errors: true
       register: mariadb_sst_username__found
     - name: Fail if the above user does not exist
-      fail:
+      ansible.builtin.fail:
         msg: >-
           The plugin for mariadb_sst_username was
           set to unix_socket but the user does not exist.
@@ -19,7 +19,7 @@
   when: mariadb_sst_user_plugin == "unix_socket"
 
 - name: Create definition for mariadb_sst_user via unix_socket
-  set_fact:
+  ansible.builtin.set_fact:
     mariadb_sst_user:
       - name: "{{ mariadb_sst_username }}"
         hosts:
@@ -31,7 +31,7 @@
   when: mariadb_sst_user_plugin == "unix_socket"
 
 - name: Create definition for mariadb_sst_user via mysql_native_password
-  set_fact:
+  ansible.builtin.set_fact:
     mariadb_sst_user:
       - name: "{{ mariadb_sst_username }}"
         hosts:

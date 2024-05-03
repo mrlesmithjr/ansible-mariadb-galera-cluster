@@ -1,6 +1,6 @@
 ---
 - name: manage_node_state | make node systemd service {{ mariadb_systemd_service_state }}
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "{{ mariadb_systemd_service_state }}"
   become: true
@@ -16,7 +16,7 @@
     - inventory_hostname == item
 
 - name: manage_node_state | ensure node is fully stopped before continuing
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "stopped"
   become: true
@@ -29,7 +29,7 @@
     - inventory_hostname == item
 
 - name: manage_node_state | ensure node is fully started before continuing
-  service:
+  ansible.builtin.service:
     name: "{{ mariadb_systemd_service_name }}"
     state: "started"
   become: true

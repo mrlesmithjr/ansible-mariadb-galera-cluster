@@ -1,7 +1,7 @@
 ---
 
 - name: ensure NIC specified in 'galera_cluster_bind_interface' exists
-  assert:
+  ansible.builtin.assert:
     that: galera_cluster_bind_interface in ansible_interfaces
     fail_msg: >-
       The NIC name "{{ galera_cluster_bind_interface }}" specified in
@@ -12,7 +12,7 @@
     - config
 
 - name: When mariadb_sst_username is unix_socket, the mariadb_sst_password should not be set
-  assert:
+  ansible.builtin.assert:
     that:
       - mariadb_sst_password == ""
     fail_msg: >-
@@ -24,7 +24,7 @@
     - config
 
 - name: When mariadb_sst_username is mysql_native_password, mariadb_sst_password should also be set
-  assert:
+  ansible.builtin.assert:
     that:
       - mariadb_sst_password != ""
     fail_msg: >-
@@ -36,7 +36,7 @@
     - config
 
 - name: Check mariadb_version on target system
-  command: "mariadb -V"
+  ansible.builtin.command: "mariadb -V"
   check_mode: false
   register: mariadb_version_check
   failed_when: '"mariadb" not in mariadb_version_check.stdout and mariadb_version_check.rc == 0'
@@ -56,12 +56,12 @@
     - config
 
 - name:
-  debug:
+  ansible.builtin.debug:
     msg: "Installed {{ mariadb_version_checked }} - mariadb_version: {{ mariadb_version }}"
   when: not mariadb_upgrade|bool and mariadb_version_check.rc == 0
 
 - name: Verify the expected mariadb_version
-  assert:
+  ansible.builtin.assert:
     that: 'mariadb_version_checked.startswith("{{ mariadb_version }}")'
     fail_msg: >-
       The mariadb_version "{{ mariadb_version }}" doesn't match the one

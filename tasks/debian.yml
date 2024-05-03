@@ -1,12 +1,12 @@
 ---
 - name: debian | update package list
-  apt:
-    update_cache: yes
+  ansible.builtin.apt:
+    update_cache: true
     cache_valid_time: 3600
   become: true
 
 - name: debian | installing pre-reqs
-  apt:
+  ansible.builtin.apt:
     name: "{{ mariadb_pre_req_packages }}"
     state: "present"
   become: true
@@ -28,7 +28,7 @@
   when: galera_enable_mariadb_repo|bool and mariadb_debian_repo_key_url is defined
 
 - name: debian | pinning MariaDB Repo
-  template:
+  ansible.builtin.template:
     src: "etc/apt/preferences.d/mariadb.j2"
     dest: "/etc/apt/preferences.d/mariadb"
     mode: "0644"
@@ -43,7 +43,7 @@
   when: galera_enable_mariadb_repo|bool
 
 - name: debian | precreate /etc/mysql/conf.d in case we need to add mariadb_config_overrides file
-  file:
+  ansible.builtin.file:
     path: "/etc/mysql/conf.d"
     state: "directory"
     mode: 0755
@@ -51,7 +51,7 @@
   when: mariadb_config_overrides is defined
 
 - name: debian | add an overrides file
-  template:
+  ansible.builtin.template:
     src: "etc/mariadb_overrides.cnf.j2"
     dest: "/etc/mysql/conf.d/overrides.cnf"
     mode: "0644"
@@ -59,7 +59,7 @@
   when: mariadb_config_overrides is defined
 
 - name: debian | installing mariadb-galera packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
     state: "present"
   become: true

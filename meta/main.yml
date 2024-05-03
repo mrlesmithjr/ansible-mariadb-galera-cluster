@@ -7,7 +7,7 @@ galaxy_info:
 
   license: MIT
 
-  min_ansible_version: 2.9
+  min_ansible_version: 9.1
   platforms:
     - name: EL
       versions:
@@ -27,7 +27,7 @@ galaxy_info:
         - bullseye
     - name: Fedora
       versions:
-        - 32
+        - 39
 
   galaxy_tags:
     - database
