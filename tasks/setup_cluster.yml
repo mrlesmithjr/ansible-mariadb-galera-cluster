@@ -124,7 +124,7 @@
   when: >
     not galera_cluster_configured.stat.exists
 
-- name: setup_cluster | custer bootstrap - killing lingering mysql processes to ensure mysql is stopped
+- name: setup_cluster | cluster bootstrap - killing lingering mysql processes to ensure mysql is stopped
   ansible.builtin.command: "pkill {{ mariadb_systemd_service_name }}" # noqa ignore-errors
   become: true
   ignore_errors: true
