@@ -59,7 +59,7 @@
 - name: redhat | installing mariadb mysql
   ansible.builtin.yum:
     name: "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
-    state: "present"
+    state: "{{ mariadb_upgrade | ternary( 'latest', 'present' ) }}"
     update_cache: true
   become: true
 
