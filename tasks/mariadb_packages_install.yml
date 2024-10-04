@@ -1,0 +1,7 @@
+---
+- name: mariadb_packages_install | installing mariadb-galera packages
+  ansible.builtin.package:
+    name: "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
+    state: "{{ mariadb_upgrade | ternary( 'latest', 'present' ) }}"
+    update_cache: true
+  become: true

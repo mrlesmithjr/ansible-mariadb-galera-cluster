@@ -56,12 +56,7 @@
   become: true
   when: mariadb_config_overrides is defined
 
-- name: redhat | installing mariadb mysql
-  ansible.builtin.yum:
-    name: "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
-    state: "present"
-    update_cache: true
-  become: true
+- ansible.builtin.import_tasks: mariadb_packages_install.yml
 
 - name: redhat | remove migrated-from-my.cnf-settings.conf that is causing MariaDB to not start
   ansible.builtin.file:
