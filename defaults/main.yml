@@ -41,6 +41,7 @@ mariadb_mysql_settings:
   datadir: "/var/lib/mysql"
   #Default is 16M
   key_buffer_size: "{{ (ansible_memtotal_mb | int * mariadb_mysql_mem_multiplier) | round | int }}M"
+  log_error: /var/log/mysql/error.log
   max_allowed_packet: "16M"
   max_binlog_size: "100M"
   query_cache_limit: "1M"
