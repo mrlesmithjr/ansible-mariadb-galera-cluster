@@ -322,3 +322,6 @@ galera_enable_cacti_monitoring: false
 # Define the cacti user info for cacti db monitoring - If used. May remove later.
 cacti_db_password: "cactiuser"
 cacti_db_user: "cactiuser"
+
+# Whether to output user data when managing users.
+galera_users_no_log: true
