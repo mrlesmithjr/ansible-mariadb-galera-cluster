@@ -13,7 +13,9 @@ basedir = /usr
 datadir	= {{ mariadb_mysql_settings['datadir'] }}
 key_buffer_size = {{ mariadb_mysql_settings['key_buffer_size'] }}
 lc-messages-dir = /usr/share/mysql
-log_error = /var/log/mysql/error.log
+{% if mariadb_mysql_settings['log_error'] is defined -%}
+log_error = {{ mariadb_mysql_settings['log_error'] }}
+{%+ endif %}
 max_allowed_packet = {{ mariadb_mysql_settings['max_allowed_packet'] }}
 max_binlog_size = {{ mariadb_mysql_settings['max_binlog_size'] }}
 myisam-recover = BACKUP
