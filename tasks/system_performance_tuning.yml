@@ -25,7 +25,4 @@
   become: true
   when:
     - mariadb_swappiness != 'auto'
-    - "not (
-      (ansible_virtualization_role == 'guest')
-      and (ansible_virtualization_type == 'lxc')
-      )"
+    - not ( (ansible_virtualization_role == 'guest') and (ansible_virtualization_type == 'lxc') )
