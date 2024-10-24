@@ -58,8 +58,4 @@
   become: true
   when: mariadb_config_overrides is defined
 
-- name: debian | installing mariadb-galera packages
-  ansible.builtin.apt:
-    name: "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_packages | union( mariabackup_packages ), mariadb_packages ) }}"
-    state: "present"
-  become: true
+- ansible.builtin.import_tasks: mariadb_packages_install.yml
