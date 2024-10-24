@@ -48,7 +48,7 @@
         galera_extra_wsrep_provider_options: >
           {{
             galera_extra_wsrep_provider_options | combine({
-              'ist.recv_addr': galera_ist_recv_addr + ":" + galera_ist_recv_addr_port,
+              'ist.recv_addr': galera_ist_recv_addr + ":" + galera_ist_recv_addr_port|string,
               'ist.recv_bind': galera_ist_recv_bind
               })
           }}
