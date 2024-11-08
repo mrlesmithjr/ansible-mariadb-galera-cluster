@@ -5,3 +5,4 @@
     state: "{{ mariadb_upgrade | ternary( 'latest', 'present' ) }}"
     update_cache: true
   become: true
+
