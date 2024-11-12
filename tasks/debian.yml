@@ -15,7 +15,7 @@
 - name: debian | adding MariaDB Repo Keys
   apt_key:
     keyserver: "{{ mariadb_debian_repo_keyserver }}"
-    id: "{{ mariadb_debian_repo_key }}"
+    id: "{{ mariadb_debian_repo_key|string }}"
     state: "present"
   become: true
   when: galera_enable_mariadb_repo|bool and not mariadb_debian_repo_key_url is defined
