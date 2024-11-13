@@ -6,7 +6,7 @@
     name: "root"
     password: "{{ mariadb_mysql_root_password }}"
   become: true
-  no_log: true
+  no_log: "{{ galera_users_no_log | bool }}"
   ignore_errors: true
   run_once: true
   retries: 6
@@ -25,7 +25,7 @@
     group: "root"
     mode: "u=rw,g=,o="
   become: true
-  no_log: true
+  no_log: "{{ galera_users_no_log | bool }}"
 
 - name: configure_root_access | updating root passwords (allow from anywhere)
   community.mysql.mysql_user:
@@ -35,7 +35,7 @@
     password: "{{ mariadb_mysql_root_password }}"
     priv: "*.*:ALL,GRANT"
   become: true
-  no_log: true
+  no_log: "{{ galera_users_no_log | bool }}"
   run_once: true
   retries: 6
   delay: 5
