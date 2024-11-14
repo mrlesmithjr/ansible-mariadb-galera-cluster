@@ -10,7 +10,7 @@ mariadb_packages:
 mariabackup_packages:
   - "MariaDB-backup"
 mariadb_certificates_dir: "/etc/my.cnf.d/certificates"
-mariadb_systemd_service_name: "mariadb"
+mariadb_systemd_service_name: "mariadb.service"
 mariadb_confs:
   - name: "etc/my.cnf.d/server.cnf"
 mariadb_temp_confs:
