@@ -1,0 +1,22 @@
+---
+- name: ensure database directory exists
+  ansible.builtin.file:
+    path: "{{ mariadb_mysql_settings.datadir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: '0755'
+
+- name: check if datadir folder is empty before proceeding
+  find:
+    paths: '/var/lib/mysql/'
+  register: filesFoundInGaleraDatadir
+
+- name: copy default files from default folder to custom datadir (if needed)
+  ansible.builtin.copy:
+    src:  /var/lib/mysql/*
+    dest: "{{ mariadb_mysql_settings.datadir }}"
+    owner: mysql
+    group: mysql
+    mode: '0755'
+  when: filesFoundInGaleraDatadir.matched == 0
