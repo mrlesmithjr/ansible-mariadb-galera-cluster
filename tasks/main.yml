@@ -29,7 +29,11 @@
 - ansible.builtin.import_tasks: system_performance_tuning.yml
   tags:
     - config
-
+    
+- ansible.builtin.import_tasks: custom_datadir_populate.yml
+  tags:
+    - always
+    
 - name: flush handlers before continuing
   meta: flush_handlers
   tags:
