@@ -13,7 +13,7 @@ mariadb_packages:
 mariabackup_packages:
   - "mariadb-backup"
 mariadb_certificates_dir: "/etc/mysql/certificates"
-mariadb_systemd_service_name: "mysql"
+mariadb_systemd_service_name: "mysql.service"
 mariadb_confs:
   - name: "etc/mysql/debian.cnf"
     mode: "0600"
