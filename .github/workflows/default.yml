@@ -43,12 +43,7 @@ jobs:
       max-parallel: 4
       matrix:
         molecule_distro:
-          # - alpine313
-          # - alpine314
-          # - centos7
-          # - centos8
-          # - debian8
-          - debian10
+          - centos8
           - debian11
           - debian12
           # - fedora

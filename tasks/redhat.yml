@@ -22,7 +22,7 @@
     - ansible_distribution_major_version is version('8', '==')
     - galera_enable_mariadb_repo | bool
 
-- name: redhat | clean dnf metadata (centos8 & fedora)
+- name: redhat | clean dnf metadata (centos>=8 & fedora)
   shell: "dnf clean all && rm -r /var/cache/dnf"
   changed_when: false
   become: true
