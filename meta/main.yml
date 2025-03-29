@@ -11,7 +11,6 @@ galaxy_info:
   platforms:
     - name: EL
       versions:
-        - 7
         - 8
         - 9
     - name: Ubuntu
@@ -22,8 +21,6 @@ galaxy_info:
         - jammy
     - name: Debian
       versions:
-        - stretch
-        - buster
         - bullseye
     - name: Fedora
       versions:
