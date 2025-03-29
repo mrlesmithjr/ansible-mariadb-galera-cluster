@@ -44,6 +44,7 @@ jobs:
       matrix:
         molecule_distro:
           - centos8
+          - centos9
           - debian11
           - debian12
           # - fedora
