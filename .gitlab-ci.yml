@@ -43,6 +43,10 @@ debian11:
   stage: molecule-test
   script:
     - molecule test --scenario-name debian11
+debian12:
+  stage: molecule-test
+  script:
+    - molecule test --scenario-name debian12
 
 #fedora:
 #  stage: molecule-test

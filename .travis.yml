@@ -11,6 +11,7 @@ env:
   - molecule_distro=rocky8
   - molecule_distro=rocky9
   - molecule_distro=debian11
+  - molecule_distro=debian12
 #  - molecule_distro=fedora
   - molecule_distro=ubuntu1604
   - molecule_distro=ubuntu1804
