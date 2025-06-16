@@ -14,9 +14,7 @@
           The plugin for mariadb_sst_username was
           set to unix_socket but the user does not exist.
       when: mariadb_sst_username__found.failed
-  delegate_to: "{{ galera_mysql_first_node }}"
-  run_once: true
-  when: mariadb_sst_user_plugin == "unix_socket"
+  when: (mariadb_sst_user_plugin == "unix_socket") and (ansible_hostname in galera_mysql_first_node)
 
 - name: Create definition for mariadb_sst_user via unix_socket
   ansible.builtin.set_fact:
@@ -26,9 +24,7 @@
           - 'localhost'
         plugin: "{{ mariadb_sst_user_plugin }}"
         priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
-  delegate_to: "{{ galera_mysql_first_node }}"
-  run_once: true
-  when: mariadb_sst_user_plugin == "unix_socket"
+  when: (mariadb_sst_user_plugin == "unix_socket") and (ansible_hostname in galera_mysql_first_node)
 
 - name: Create definition for mariadb_sst_user via mysql_native_password
   ansible.builtin.set_fact:
@@ -38,9 +34,7 @@
           - 'localhost'
         password: "{{ mariadb_sst_password }}"
         priv: "*.*:RELOAD,PROCESS,LOCK TABLES,BINLOG MONITOR"
-  delegate_to: "{{ galera_mysql_first_node }}"
-  run_once: true
-  when: mariadb_sst_user_plugin == "mysql_native_password"
+  when: (mariadb_sst_user_plugin == "mysql_native_password") and (ansible_hostname in galera_mysql_first_node)
 
 - name: mysql_users | create MySQL users
   community.mysql.mysql_user:
@@ -58,8 +52,7 @@
     state: "{{ item.0.state | default('present') }}"
   become: true
   no_log: true
-  delegate_to: "{{ galera_mysql_first_node }}"
-  run_once: true
+  when: ansible_hostname in galera_mysql_first_node
   with_subelements:
     - "{{ (galera_sst_method == 'mariabackup') | ternary( mariadb_mysql_users | union( mariadb_sst_user ), mariadb_mysql_users ) }}"
     - "hosts"
