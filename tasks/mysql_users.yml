@@ -57,7 +57,7 @@
     priv: "{{ item.0.priv | default('*.*:USAGE') }}"
     state: "{{ item.0.state | default('present') }}"
   become: true
-  no_log: "{{ galera_users_no_log | bool }}"
+  no_log: "{{ galera_users_no_log | bool | default(true) }}"
   delegate_to: "{{ galera_mysql_first_node }}"
   run_once: true
   with_subelements:
