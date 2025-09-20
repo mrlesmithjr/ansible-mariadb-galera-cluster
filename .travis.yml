@@ -6,7 +6,6 @@ services:
 before_install:
   - sudo apt-get -qq update
 env:
-  - molecule_distro=centos8
   - molecule_distro=centos9
   - molecule_distro=rocky8
   - molecule_distro=rocky9
