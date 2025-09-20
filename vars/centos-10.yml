@@ -1,10 +1,13 @@
 ---
 mariadb_login_unix_socket: "/var/lib/mysql/mysql.sock"
+
+mariadb_redhat_repo: "https://mirror.mariadb.org/yum/{{ mariadb_version }}/fedora40-amd64"
+
 mariadb_pre_req_packages:
   - "epel-release"
   - "procps-ng"
 mariadb_packages:
-  - "python3-mysql"
+  - "python-mysqlclient"
   - "MariaDB-server"
   - "galera-4"
 mariabackup_packages:

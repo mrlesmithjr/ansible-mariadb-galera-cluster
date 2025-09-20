@@ -13,6 +13,7 @@ lint: |
 platforms:
   - name: node1
     image: mrlesmithjr/rocky:8
+    pull: false
     privileged: true
     command: /usr/sbin/init
     volumes:
@@ -22,6 +23,7 @@ platforms:
       - galera-cluster-nodes
   - name: node2
     image: mrlesmithjr/rocky:8
+    pull: false
     privileged: true
     command: /usr/sbin/init
     volumes:

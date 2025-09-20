@@ -43,19 +43,19 @@ jobs:
       max-parallel: 4
       matrix:
         molecule_distro:
-          - centos8
           - centos9
+          - centos10
           - debian11
           - debian12
-          # - fedora
-          # - fedora34
-          # - fedora35
+          - debian13
+          - fedora
           - rocky8
           - rocky9
-          # - ubuntu1604
+          - rocky10
           - ubuntu1804
           - ubuntu2004
           - ubuntu2204
+          - ubuntu2404
         python-version: ["3.10"]
 
     steps:

@@ -21,10 +21,6 @@ before_script:
   - ansible --version
   - molecule --version
 
-centos8:
-  stage: molecule-test
-  script:
-    - molecule test --scenario-name centos8
 centos9:
   stage: molecule-test
   script:
