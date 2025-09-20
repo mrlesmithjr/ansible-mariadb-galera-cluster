@@ -1,5 +1,6 @@
 ---
 name: Ansible Galaxy
+
 on:
   push:
     branches:
@@ -16,20 +17,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Set up Python ${{ matrix.python-version }}
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
+
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-dev.txt
           pip install pre-commit
+
       - name: Trigger a new import on Galaxy.
         run: ansible-galaxy role import --api-key ${{ secrets.GALAXY_API_KEY }} $(echo ${{ github.repository }} | cut -d/ -f1) $(echo ${{ github.repository }} | cut -d/ -f2)
