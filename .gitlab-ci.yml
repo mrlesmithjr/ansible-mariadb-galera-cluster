@@ -21,40 +21,28 @@ before_script:
   - ansible --version
   - molecule --version
 
-centos7:
+centos9:
   stage: molecule-test
   script:
-    - molecule test --scenario-name centos7
-
-centos8:
-  stage: molecule-test
-  script:
-    - molecule test --scenario-name centos8
+    - molecule test --scenario-name centos9
 
 rocky8:
   stage: molecule-test
   script:
     - molecule test --scenario-name rocky8
-
 rocky9:
   stage: molecule-test
   script:
     - molecule test --scenario-name rocky9
 
-debian9:
-  stage: molecule-test
-  script:
-    - molecule test --scenario-name debian9
-
-debian10:
-  stage: molecule-test
-  script:
-    - molecule test --scenario-name debian10
-
 debian11:
   stage: molecule-test
   script:
     - molecule test --scenario-name debian11
+debian12:
+  stage: molecule-test
+  script:
+    - molecule test --scenario-name debian12
 
 #fedora:
 #  stage: molecule-test

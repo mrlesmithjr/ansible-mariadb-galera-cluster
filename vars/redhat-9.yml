@@ -1,19 +1,14 @@
 ---
 mariadb_login_unix_socket: "/var/lib/mysql/mysql.sock"
-
-mariadb_redhat_repo: "https://mirror.mariadb.org/yum/{{ mariadb_version }}/rhel9-amd64"
-
 mariadb_pre_req_packages:
-  - "epel-release"
-  - "procps-ng"
-mariadb_packages:
   - "python3-mysqlclient"
+mariadb_packages:
   - "MariaDB-server"
   - "galera-4"
 mariabackup_packages:
   - "MariaDB-backup"
 mariadb_certificates_dir: "/etc/my.cnf.d/certificates"
-mariadb_systemd_service_name: "mariadb.service"
+mariadb_systemd_service_name: "mysql.service"
 mariadb_confs:
   - name: "etc/my.cnf.d/server.cnf"
 mariadb_temp_confs:

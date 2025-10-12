@@ -12,7 +12,8 @@ lint: |
   flake8
 platforms:
   - name: node1
-    image: mrlesmithjr/debian:9
+    image: mrlesmithjr/ubuntu:24.04
+    pull: false
     privileged: true
     command: /lib/systemd/systemd
     volumes:
@@ -21,7 +22,8 @@ platforms:
     groups:
       - galera-cluster-nodes
   - name: node2
-    image: mrlesmithjr/debian:9
+    image: mrlesmithjr/ubuntu:24.04
+    pull: false
     privileged: true
     command: /lib/systemd/systemd
     volumes:

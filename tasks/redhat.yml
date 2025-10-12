@@ -6,7 +6,7 @@
     description: "MariaDB"
     baseurl: "{{ mariadb_redhat_repo }}"
     gpgkey: "{{ mariadb_redhat_repo_key }}"
-    gpgcheck: true
+    gpgcheck: "{{ (ansible_distribution_major_version is version('10', '==')) | ternary(false, true) }}"
   become: true
   register: "repo_added"
   when:
@@ -22,7 +22,7 @@
     - ansible_distribution_major_version is version('8', '==')
     - galera_enable_mariadb_repo | bool
 
-- name: redhat | clean dnf metadata (centos8 & fedora)
+- name: redhat | clean dnf metadata (centos & fedora)
   shell: "dnf clean all && rm -r /var/cache/dnf"
   changed_when: false
   become: true
@@ -32,7 +32,7 @@
     - galera_enable_mariadb_repo | bool
 
 - name: redhat | installing pre-reqs
-  ansible.builtin.yum:
+  ansible.builtin.package:
     name: "{{ mariadb_pre_req_packages }}"
     state: "present"
     update_cache: true

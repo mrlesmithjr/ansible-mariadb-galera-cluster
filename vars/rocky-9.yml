@@ -1,6 +1,6 @@
 ---
 mariadb_login_unix_socket: "/var/lib/mysql/mysql.sock"
-mariadb_redhat_repo: "https://yum.mariadb.org/{{ mariadb_version }}/rhel9-amd64"
+mariadb_redhat_repo: "https://mirror.mariadb.org/yum/{{ mariadb_version }}/rhel9-amd64"
 mariadb_pre_req_packages:
   - "epel-release"
   - "procps-ng"

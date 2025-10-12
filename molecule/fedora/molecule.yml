@@ -12,7 +12,7 @@ lint: |
   flake8
 platforms:
   - name: node1
-    image: jrei/systemd-fedora
+    image: mrlesmithjr/fedora:42
     privileged: true
     command: /usr/sbin/init
     volumes:
@@ -21,7 +21,7 @@ platforms:
     groups:
       - galera-cluster-nodes
   - name: node2
-    image: jrei/systemd-fedora
+    image: mrlesmithjr/fedora:42
     privileged: true
     command: /usr/sbin/init
     volumes:

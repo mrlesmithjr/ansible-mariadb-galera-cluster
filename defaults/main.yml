@@ -16,8 +16,8 @@ mariadb_debian_repo_pin: "nyc2.mirrors.digitalocean.com"
 mariadb_debian_repo_pin_priority: 600
 
 # Defines repository settings for rpm
-mariadb_redhat_repo: "https://yum.mariadb.org/{{ mariadb_version }}/{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}-amd64"
-mariadb_redhat_repo_key: "https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"
+mariadb_redhat_repo: "https://mirror.mariadb.org/yum/{{ mariadb_version }}/{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}-amd64"
+mariadb_redhat_repo_key: "https://mirror.mariadb.org/yum/RPM-GPG-KEY-MariaDB"
 
 # bind address for MariaDB's 3306 port.
 # By default takes the value of the galera cluster IP, but can be overriden
