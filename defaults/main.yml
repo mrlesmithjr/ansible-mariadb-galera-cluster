@@ -4,7 +4,7 @@
 # MariaDB setting
 
 # Define mariadb version
-mariadb_version: "10.11"
+mariadb_version: "12.0"
 
 # Defines if we should enable the MariaDB repo or use version within OS repos.
 galera_enable_mariadb_repo: true
