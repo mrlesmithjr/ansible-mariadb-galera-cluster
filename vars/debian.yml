@@ -1,6 +1,7 @@
 ---
 mariadb_login_unix_socket: "/var/run/mysqld/mysqld.sock"
 mariadb_pre_req_packages:
+  - "python3-debian"
   - "python3-pymysql"
   - "rsync"
 mariadb_packages:
