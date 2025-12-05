@@ -101,10 +101,11 @@ galera_reconfigure_galera: false
 
 # Define interface in which to bind
 # ex. eth0|eth1|enp0s3|enp0s8
+# ex. dynamic: "{{ ansible_default_ipv4['interface'] }}"
 galera_cluster_bind_interface: "eth0"
 
 # Define bind address for galera cluster
-galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
+galera_cluster_bind_address: "{{ ansible_default_ipv4['address'] }}"
 
 # Defines wsrep node address
 galera_wsrep_node_address: "{{ galera_cluster_bind_address }}:{{ galera_wsrep_node_address_port }}"

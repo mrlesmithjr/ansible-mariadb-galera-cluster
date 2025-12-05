@@ -2,6 +2,11 @@
 - name: Converge
   hosts: all
   tasks:
+    - name: Include default vars
+      ansible.builtin.include_vars:
+        dir: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/defaults/'
+        extensions:
+          - 'yml'
     - name: Include ansible-mariadb-galera-cluster
       include_role:
         name: ansible-mariadb-galera-cluster
