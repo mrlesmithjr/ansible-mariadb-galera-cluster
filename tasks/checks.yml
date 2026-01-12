@@ -2,11 +2,11 @@
 
 - name: ensure NIC specified in 'galera_cluster_bind_interface' exists
   ansible.builtin.assert:
-    that: galera_cluster_bind_interface in ansible_interfaces
+    that: galera_cluster_bind_interface in ansible_facts['interfaces']
     fail_msg: >-
       The NIC name "{{ galera_cluster_bind_interface }}" specified in
       "galera_cluster_bind_interface" does not exist on the target host.
-      Available interfaces are: "{{ ansible_interfaces | join(',') }}".
+      Available interfaces are: "{{ ansible_facts['interfaces'] | join(',') }}".
   tags:
     - install
     - config
