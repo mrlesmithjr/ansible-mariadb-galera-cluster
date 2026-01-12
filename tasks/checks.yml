@@ -62,7 +62,7 @@
 
 - name: Verify the expected mariadb_version
   ansible.builtin.assert:
-    that: 'mariadb_version_checked.startswith("{{ mariadb_version }}")'
+    that: mariadb_version_checked.startswith(mariadb_version)
     fail_msg: >-
       The mariadb_version "{{ mariadb_version }}" doesn't match the one
       installed on the system: {{ mariadb_version_checked }}.
