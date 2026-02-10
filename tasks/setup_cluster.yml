@@ -63,7 +63,7 @@
               })
           }}
       when:
-        - mariadb_tls_files
+        - mariadb_tls_files is defined
         - mariadb_tls_files|length == 3
         - galera_wsrep_tls_enabled
     - name: Add galera_use_gmcast_segment if present
