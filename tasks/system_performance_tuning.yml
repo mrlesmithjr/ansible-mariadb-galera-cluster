@@ -1,17 +1,17 @@
 ---
 - ansible.builtin.import_tasks: max-open-files.yml
   when: >
-    ansible_facts['service_mgr'] == "systemd" and
+    ansible_service_mgr == "systemd" and
     mariadb_max_open_files != 0
 
 - ansible.builtin.import_tasks: oom-score-adjust.yml
   when: >
-    ansible_facts['service_mgr'] == "systemd" and
+    ansible_service_mgr == "systemd" and
     mariadb_oom_score_adjust != 0
 
 - ansible.builtin.import_tasks: timeout-start-sec.yml
   when: >
-    ansible_facts['service_mgr'] == "systemd" and
+    ansible_service_mgr == "systemd" and
     mariadb_timeout_start_sec != 0
 
 # Borrowed from percona xtradb cluster ansible role:
@@ -26,6 +26,6 @@
   when:
     - mariadb_swappiness != 'auto'
     - "not (
-      (ansible_facts['virtualization_role'] == 'guest')
-      and (ansible_facts['virtualization_type'] == 'lxc')
+      (ansible_virtualization_role == 'guest')
+      and (ansible_virtualization_type == 'lxc')
       )"

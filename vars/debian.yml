@@ -1,9 +1,13 @@
 ---
 mariadb_login_unix_socket: "/var/run/mysqld/mysqld.sock"
 mariadb_pre_req_packages:
-  - "python3-debian"
+  - "apt-transport-https"
+  - "software-properties-common"
   - "python3-pymysql"
   - "rsync"
+  - "gnupg"
+  - "python-pymysql"
+mariadb_debian_repo_key: "0xF1656F24C74CD1D8"
 mariadb_packages:
   - "mariadb-server"
 mariabackup_packages:
