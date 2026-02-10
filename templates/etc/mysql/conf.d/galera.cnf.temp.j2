@@ -47,7 +47,7 @@ wsrep_node_name={{ ansible_hostname }}
 wsrep_provider={{ galera_wsrep_provider }}
 wsrep_cluster_name="{{ galera_cluster_name }}"
 {% set _galera_cluster_node_addresses = [] %}
-{% for node in groups[ galera_cluster_nodes_group ] %}
+{% for node in galera_cluster_nodes %}
 {%   set _ = _galera_cluster_node_addresses.append( hostvars[node][galera_cluster_bind_address] | default(hostvars[node]['ansible_' ~ galera_cluster_bind_interface]['ipv4']['address']) | mandatory ) %}
 {% endfor %}
 #wsrep_cluster_address="{{ 'gcomm://' ~ _galera_cluster_node_addresses | map('ansible.utils.ipwrap') | list | join(',') }}"

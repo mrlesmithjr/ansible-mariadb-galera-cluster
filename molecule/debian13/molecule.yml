@@ -35,10 +35,5 @@ provisioner:
     converge: ../shared/converge.yml
     prepare: ../shared/prepare.yml
     side_effect: ../shared/side_effect.yml
-  inventory:
-    group_vars:
-      galera-cluster-nodes:
-        # For Debian 13 use MariaDB 12.2, because by default older versions are not available for Trixie
-        mariadb_version: "12.2"
 verifier:
   name: ansible
