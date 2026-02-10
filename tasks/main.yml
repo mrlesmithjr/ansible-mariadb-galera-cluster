@@ -7,9 +7,9 @@
     - install
     - config
   with_first_found:
-    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
-    - "{{ ansible_distribution | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
+    - "{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] | lower }}.yml"
+    - "{{ ansible_facts['distribution'] | lower }}.yml"
+    - "{{ ansible_facts['os_family'] | lower }}.yml"
 
 - ansible.builtin.import_tasks: checks.yml
   tags:
@@ -19,12 +19,12 @@
 - ansible.builtin.import_tasks: debian.yml
   tags:
     - install
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
 
 - ansible.builtin.import_tasks: redhat.yml
   tags:
     - install
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
 
 - ansible.builtin.import_tasks: system_performance_tuning.yml
   tags:
