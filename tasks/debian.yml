@@ -17,7 +17,7 @@
     name: mariadb
     types: deb
     uris: "{{ mariadb_debian_repo }}"
-    suites: "{{ ansible_facts['distribution_release'] | lower }}"
+    suites: "{{ ansible_distribution_release|lower }}"
     components: main
     signed_by: "{{ mariadb_debian_repo_key }}"
     state: present
