@@ -63,7 +63,7 @@
     path: "/etc/systemd/system/mariadb.service.d/migrated-from-my.cnf-settings.conf"
     state: "absent"
   become: true
-  notify: reload systemd daemon
+  notify: Reload systemd daemon
 
 - name: redhat | ensuring mariadb mysql is enabled on boot
   ansible.builtin.service:
