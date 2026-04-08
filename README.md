@@ -1,30 +1,34 @@
 # ansible-mariadb-galera-cluster
 
-An [Ansible](https://www.ansible.com) role to deploy and manage a [MariaDB Galera Cluster](https://mariadb.com/kb/en/mariadb/what-is-mariadb-galera-cluster/) for high availability MySQL.
+An [Ansible](https://www.ansible.com) role to deploy and manage a [MariaDB Galera Cluster](https://mariadb.com/kb/en/what-is-mariadb-galera-cluster/) for high-availability MySQL.
+
+## Ansible Galaxy
+
+```bash
+ansible-galaxy install mrlesmithjr.mariadb_galera_cluster
+```
 
 ## Features
 
 - Automatic cluster bootstrap and node joining
-- Support for MariaDB 10.x versions
-- TLS encryption for MySQL, WSREP, and SST connections
-- Multiple SST methods (rsync, mariabackup)
+- TLS encryption for MySQL client, WSREP, and SST connections
+- Multiple SST methods: `rsync`, `mariabackup`
 - InnoDB tuning with automatic memory calculations
-- Slow query logging
-- Email notifications for cluster events
-- Database and user management
+- Slow query logging and email notifications for cluster events
+- Database and user management via variables
 
 ## Supported Platforms
 
 | Platform | Versions |
 |----------|----------|
-| Ubuntu | 16.04 (Xenial), 18.04 (Bionic), 20.04 (Focal), 22.04 (Jammy) |
-| Debian | 11 (Bullseye) |
-| EL/CentOS/Rocky | 8, 9 |
-| Fedora | 39 |
+| Ubuntu | 20.04, 22.04, 24.04 |
+| Debian | 11, 12, 13 |
+| Rocky Linux / RHEL | 8, 9, 10 |
+| Fedora | 39+ |
 
 ## Requirements
 
-### Collections
+### Ansible Collections
 
 ```bash
 ansible-galaxy collection install community.mysql
@@ -32,11 +36,11 @@ ansible-galaxy collection install community.mysql
 
 ### Minimum Ansible Version
 
-- Ansible 9.1+
+Ansible 9.1+
 
 ## Quick Start
 
-### 1. Create inventory
+### 1. Inventory
 
 ```ini
 [galera-cluster-nodes]
@@ -48,7 +52,7 @@ node3 ansible_host=192.168.1.12
 galera_cluster_bind_interface=eth0
 ```
 
-### 2. Create playbook
+### 2. Playbook
 
 ```yaml
 ---
@@ -62,7 +66,7 @@ galera_cluster_bind_interface=eth0
     - role: mrlesmithjr.mariadb_galera_cluster
 ```
 
-### 3. Run playbook
+### 3. Run
 
 ```bash
 ansible-playbook -i inventory playbook.yml
@@ -77,13 +81,13 @@ ansible-playbook -i inventory playbook.yml
 | `mariadb_version` | `"10.11"` | MariaDB version to install |
 | `mariadb_mysql_root_password` | `"root"` | MySQL root password |
 | `mariadb_mysql_port` | `3306` | MySQL listen port |
-| `galera_enable_mariadb_repo` | `true` | Use official MariaDB repos |
+| `galera_enable_mariadb_repo` | `true` | Use official MariaDB repositories |
 
 ### Cluster Settings
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `galera_cluster_name` | `"vagrant-test"` | Name of the Galera cluster |
+| `galera_cluster_name` | `"vagrant-test"` | Galera cluster name |
 | `galera_cluster_nodes_group` | `"galera-cluster-nodes"` | Ansible group containing cluster nodes |
 | `galera_cluster_bind_interface` | `"eth0"` | Network interface for cluster communication |
 | `galera_sst_method` | `"rsync"` | State snapshot transfer method |
@@ -91,6 +95,8 @@ ansible-playbook -i inventory playbook.yml
 ### TLS Configuration
 
 ```yaml
+galera_wsrep_tls_enabled: true
+galera_sst_tls_enabled: true
 mariadb_tls_files:
   ca_cert:
     name: "ca.pem"
@@ -101,9 +107,6 @@ mariadb_tls_files:
   server_cert:
     name: "server-cert.pem"
     content: "{{ lookup('file', 'certs/server-cert.pem') }}"
-
-galera_wsrep_tls_enabled: true
-galera_sst_tls_enabled: true
 ```
 
 ### Database and User Management
@@ -123,56 +126,39 @@ mariadb_mysql_users:
     priv: "myapp.*:ALL"
 ```
 
-## Role Variables
-
 See [defaults/main.yml](defaults/main.yml) for all available variables.
 
 ## Cluster Operations
 
-### Reconfigure Cluster
-
-To reconfigure an existing cluster (triggers shutdown and bootstrap):
+### Reconfigure an existing cluster
 
 ```yaml
 galera_reconfigure_galera: true
 ```
 
-### Upgrading MariaDB
-
-To allow MariaDB version upgrades:
+### Upgrade MariaDB version
 
 ```yaml
 mariadb_upgrade: true
 ```
 
-## Dependencies
-
-None
-
-## Example Playbook
-
-See [playbook.yml](./playbook.yml) for a complete example.
-
 ## Testing
-
-This role includes Molecule tests:
 
 ```bash
 pip install molecule molecule-docker
-cd ansible-mariadb-galera-cluster
 molecule test
 ```
+
+## Support This Project
+
+If your organization runs this role in production, consider
+[sponsoring its maintenance](https://github.com/sponsors/mrlesmithjr).
+Enterprise tiers with priority support and 48-hour issue triage are available.
 
 ## License
 
 MIT
 
-## Author Information
+## Author
 
-Larry Smith Jr.
-
-- [@mrlesmithjr](https://twitter.com/mrlesmithjr)
-- [mrlesmithjr@gmail.com](mailto:mrlesmithjr@gmail.com)
-- [http://everythingshouldbevirtual.com](http://everythingshouldbevirtual.com)
-
-<a href="https://www.buymeacoffee.com/mrlesmithjr" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+Larry Smith Jr. — [everythingshouldbevirtual.com](http://everythingshouldbevirtual.com) · [mrlesmithjr@gmail.com](mailto:mrlesmithjr@gmail.com)
