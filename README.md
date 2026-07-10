@@ -31,7 +31,7 @@ ansible-galaxy install mrlesmithjr.mariadb_galera_cluster
 ### Ansible Collections
 
 ```bash
-ansible-galaxy collection install community.mysql
+ansible-galaxy collection install ansible.mysql
 ```
 
 ### Minimum Ansible Version

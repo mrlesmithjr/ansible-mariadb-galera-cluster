@@ -3,6 +3,7 @@ collections:
   - name: ansible.utils
     version: ">=2.12.0"
   - name: ansible.netcommon
+  - name: ansible.mysql
   - name: community.docker
     version: "*" # Need to ensure that the latest version is installed or Molecule fails
 roles: []

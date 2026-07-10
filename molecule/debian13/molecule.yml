@@ -38,7 +38,9 @@ provisioner:
   inventory:
     group_vars:
       galera-cluster-nodes:
-        # For Debian 13 use MariaDB 12.2, because by default older versions are not available for Trixie
-        mariadb_version: "12.2"
+        # For Debian 13 (trixie) use MariaDB 12.3: 12.2 was retired from
+        # deb.mariadb.org/mirror.mariadb.org and older majors do not publish
+        # trixie packages.
+        mariadb_version: "12.3"
 verifier:
   name: ansible

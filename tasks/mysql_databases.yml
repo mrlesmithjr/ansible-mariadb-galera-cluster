@@ -3,7 +3,7 @@
 # https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/postinstall.yml
 # Many thanks to Cedric DELGEHIER
 - name: mysql_databases | create the databases
-  community.mysql.mysql_db:
+  ansible.mysql.mysql_db:
     name: "{{ item.name }}"
     state: present
     login_unix_socket: "{{ mariadb_login_unix_socket | default(omit) }}"
@@ -22,7 +22,7 @@
     - item.item.init_script is defined
 
 - name: mysql_databases | initialise databases
-  community.mysql.mysql_db:
+  ansible.mysql.mysql_db:
     name: "{{ item.item.name }}"
     state: import
     target: "/tmp/{{ item.item.init_script | basename }}"
