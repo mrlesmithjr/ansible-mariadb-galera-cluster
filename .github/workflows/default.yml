@@ -17,6 +17,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      # The ansible-lint pre-commit hook hard-pins language_version:
+      # python3.14 in its own .pre-commit-hooks.yaml, so a python3.14
+      # interpreter must be resolvable on PATH for pre-commit to build
+      # that hook's virtualenv, independent of the 3.11 used to install
+      # this repo's own (older-pinned) requirements.txt below.
+      - name: Set up Python 3.14 (for ansible-lint pre-commit hook)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
@@ -25,11 +34,11 @@ jobs:
             ${{ runner.os }}-pip-
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pre-commit
+          python3.11 -m pip install --upgrade pip
+          python3.11 -m pip install -r requirements.txt
+          python3.11 -m pip install pre-commit
       - name: Run pre-commit checks
-        uses: pre-commit/action@v3.0.0
+        run: python3.11 -m pre_commit run --show-diff-on-failure --color=always --all-files
   molecule:
     name: Molecule Test
     runs-on: ubuntu-latest

@@ -14,8 +14,8 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, develop, --branch, master, --branch, main]
       - id: trailing-whitespace
-  - repo: https://github.com/ansible-community/ansible-lint
-    rev: v6.17.2
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v26.6.0
     hooks:
       - id: ansible-lint
   - repo: https://github.com/psf/black
