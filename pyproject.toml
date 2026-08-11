@@ -6,17 +6,17 @@ authors = ["Larry Smith Jr. <mrlesmithjr@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-ansible = "9.1.0"
-netaddr = "^0.8.0"
+ansible = "10.7.0"
+netaddr = ">=0.8,<1.4"
 
 [tool.poetry.group.dev.dependencies]
-ansible-lint = "6.8.7"
-black = "^24.3.0"
-pylint = "^2.15.7"
-molecule = {extras = ["docker"], version = "^4.0.3"}
-flake8 = "^6.0.0"
+ansible-lint = "26.4.0"
+black = ">=24.3,<27.0"
+pylint = ">=2.15.7,<5.0.0"
+molecule = {extras = ["docker"], version = ">=4.0.3,<27.0.0"}
+flake8 = ">=6,<8"
 cookiecutter = "^2.1.1"
-pre-commit = "^2.20.0"
+pre-commit = ">=2.20,<5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
